@@ -78,12 +78,14 @@ public class LogOnPage {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				String username = lblEnterUsername.getText();
-				String password = lblEnterPassword.getText();
+				String username = usernameEnter.getText();
+				String password = passwordEnter.getText();
 
 				try {
-					if (checkExists(username, password) == true) {
-						
+					if (checkExists(username, password)) {
+						LeagueDeveloperPage.main();
+					}else {
+						JOptionPane.showMessageDialog(null, "Incorrect login details entered");
 					}
 				} catch (SQLException e) {
 					JOptionPane.showMessageDialog(null, "Incorrect login details entered");
@@ -100,7 +102,7 @@ public class LogOnPage {
 				"jdbc:mysql://localhost:3306/users?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC",
 				"root", "password");
 		Statement stmt = conn.createStatement();
-		String SQL = "select * from users where username = '" + username + "' and password = '" + password + "';";
+		String SQL = "select * from users where username = '"+ username + "' and password = '" + password + "';";
 
 		ResultSet rset = stmt.executeQuery(SQL);
 

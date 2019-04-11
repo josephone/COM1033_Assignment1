@@ -141,7 +141,7 @@ public class RegisterPage {
 	public void registerAccount(String username, String password, String role)
 			throws SQLException, ClassNotFoundException {
 
-		if (checkExists(username) == true) {
+		if (checkExists(username)) {
 			JOptionPane.showMessageDialog(null,
 					"An account already exists with that username, please choose a different username");
 			throw new SQLException();
@@ -153,28 +153,10 @@ public class RegisterPage {
 
 					Statement stmt = conn.createStatement();) {
 
-				if (role.equals("Player")) {
-					String playerInput = "insert into players(username, password, role) values ('" + username + "', '"
-							+ password + "', '" + role + "');";
-					System.out.println("The SQL statement is: " + playerInput + "\n");
-					stmt.executeUpdate(playerInput);
-					String userInput = "insert into users values ('" + username + "', '" + password + "');";
-					stmt.executeUpdate(userInput);
+				if (role.equals("Player") || role.equals("Manager") || role.equals("League developer")) {
 
-				} else if (role.equals("Manager")) {
-					String managerInput = "insert into managers(username, password, role) values ('" + username + "', '"
-							+ password + "', '" + role + "');";
-					System.out.println("The SQL statement is: " + managerInput + "\n");
-					stmt.executeUpdate(managerInput);
-					String userInput = "insert into users values ('" + username + "', '" + password + "');";
-					stmt.executeUpdate(userInput);
-
-				} else if (role.equals("League developer")) {
-					String developerInput = "insert into leaguedevelopers(username, password, role) values ('"
-							+ username + "', '" + password + "', '" + role + "');";
-					System.out.println("The SQL statement is: " + developerInput + "\n");
-					stmt.executeUpdate(developerInput);
-					String userInput = "insert into users values ('" + username + "', '" + password + "');";
+					String userInput = "insert into users values ('" + username + "', '" + password + "', '" + role
+							+ "');";
 					stmt.executeUpdate(userInput);
 
 				} else {
