@@ -90,27 +90,15 @@ public class RegisterPage {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 
-				final String passwordConstraint = "[a-zA-Z]+[0-9]+";
-
 				String role = roleChoice.getText();
 				String username = usernameChoice.getText();
 				String password = passwordChoice.getText();
 
-				if (role == null || username == null || password == null) {
-					inputChoice = false;
-				} else if (password.length() < 5 || !password.matches(passwordConstraint)) {
-					inputChoice = false;
-				} else {
-					inputChoice = true;
-				}
-
 				try {
-					if (inputChoice = true) {
-						registerAccount(username, password, role);
-						JOptionPane.showMessageDialog(null, "Registration successful");
-					} else {
-						JOptionPane.showMessageDialog(null, "Username, password or role not entered correctly");
-					}
+
+					registerAccount(username, password, role);
+					JOptionPane.showMessageDialog(null, "Registration successful");
+
 				} catch (ClassNotFoundException e) {
 					e.printStackTrace();
 
@@ -140,12 +128,20 @@ public class RegisterPage {
 
 	public void registerAccount(String username, String password, String role)
 			throws SQLException, ClassNotFoundException {
-
+		final String passwordConstraint = "[a-zA-Z]+[0-9]+";
 		if (checkExists(username)) {
 			JOptionPane.showMessageDialog(null,
 					"An account already exists with that username, please choose a different username");
 			throw new SQLException();
 		} else {
+
+			if (role.equals("") || username.equals("") || password.equals("")) {
+				JOptionPane.showMessageDialog(null, "Username, password or role entered incorrectly");
+				throw new SQLException();
+			} else if (password.length() < 5 || !password.matches(passwordConstraint)) {
+				JOptionPane.showMessageDialog(null, "Password does not meet criteria");
+				throw new SQLException();
+			}
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			try (Connection conn = DriverManager.getConnection(
 					"jdbc:mysql://localhost:3306/users?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC",

@@ -93,7 +93,7 @@ public class LogOnPage {
 						case "Player":
 							PlayerPage.main();
 							break;
-						
+
 						default:
 							throw new SQLException();
 						}
@@ -136,11 +136,12 @@ public class LogOnPage {
 		Statement stmt = conn.createStatement();
 
 		ResultSet result = stmt.executeQuery(SQL);
+		
 		result.beforeFirst();
 		result.next();
-		
+
 		return result.getString(1).toString();
-		
+
 	}
 
 }
