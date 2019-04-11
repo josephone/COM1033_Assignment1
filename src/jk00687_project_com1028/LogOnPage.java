@@ -83,8 +83,22 @@ public class LogOnPage {
 
 				try {
 					if (checkExists(username, password)) {
-						LeagueDeveloperPage.main();
-					}else {
+						switch (checkRole(username)) {
+						case "League developer":
+							LeagueDeveloperPage.main();
+							break;
+						case "Manager":
+							ManagerPage.main();
+							break;
+						case "Player":
+							PlayerPage.main();
+							break;
+						
+						default:
+							throw new SQLException();
+						}
+
+					} else {
 						JOptionPane.showMessageDialog(null, "Incorrect login details entered");
 					}
 				} catch (SQLException e) {
@@ -102,7 +116,7 @@ public class LogOnPage {
 				"jdbc:mysql://localhost:3306/users?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC",
 				"root", "password");
 		Statement stmt = conn.createStatement();
-		String SQL = "select * from users where username = '"+ username + "' and password = '" + password + "';";
+		String SQL = "select * from users where username = '" + username + "' and password = '" + password + "';";
 
 		ResultSet rset = stmt.executeQuery(SQL);
 
@@ -111,6 +125,22 @@ public class LogOnPage {
 		} else {
 			return false;
 		}
+	}
+
+	public String checkRole(String username) throws SQLException {
+
+		Connection conn = DriverManager.getConnection(
+				"jdbc:mysql://localhost:3306/users?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC",
+				"root", "password");
+		String SQL = "select role from users where username = '" + username + "';";
+		Statement stmt = conn.createStatement();
+
+		ResultSet result = stmt.executeQuery(SQL);
+		result.beforeFirst();
+		result.next();
+		
+		return result.getString(1).toString();
+		
 	}
 
 }
