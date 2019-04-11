@@ -63,7 +63,7 @@ public class RegisterPage {
 		passwordChoice = new JTextField();
 		passwordChoice.setBounds(115, 106, 86, 20);
 		frame.getContentPane().add(passwordChoice);
-		passwordChoice.setColumns(100);
+		passwordChoice.setColumns(10);
 
 		JLabel lblEnterUsername = new JLabel("Enter username:");
 		lblEnterUsername.setBounds(10, 60, 101, 14);
