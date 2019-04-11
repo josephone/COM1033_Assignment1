@@ -8,6 +8,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Arrays;
 
 import javax.swing.JFrame;
 import javax.swing.JTextField;
@@ -135,7 +136,7 @@ public class RegisterPage {
 			throw new SQLException();
 		} else {
 
-			if (role.equals("") || username.equals("") || password.equals("")) {
+			if (Arrays.stream((new String[] { role, username, password })).filter(x -> x.length() == 0).count() > 0) {
 				JOptionPane.showMessageDialog(null, "Username, password or role entered incorrectly");
 				throw new SQLException();
 			} else if (password.length() < 5 || !password.matches(passwordConstraint)) {
