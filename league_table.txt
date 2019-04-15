@@ -1,0 +1,2 @@
+Team name	Games Played	Wins	Draws	Losses	Goals for	Goals against	Goal difference	Points
+Ali Baba	1	1	0	0	2	0	2	3	

@@ -44,7 +44,7 @@ public class HomePage {
 		frame.getContentPane().setLayout(null);
 		
 		JButton btnRegisterNewAccount = new JButton("Register new account");
-		btnRegisterNewAccount.setBounds(31, 88, 145, 71);
+		btnRegisterNewAccount.setBounds(33, 145, 145, 71);
 		frame.getContentPane().add(btnRegisterNewAccount);
 		btnRegisterNewAccount.addActionListener(new ActionListener() {
 
@@ -58,8 +58,19 @@ public class HomePage {
 		});
 		
 		JButton btnLogIntoAccount = new JButton("Log into account");
-		btnLogIntoAccount.setBounds(249, 88, 151, 71);
+		btnLogIntoAccount.setBounds(247, 145, 151, 71);
 		frame.getContentPane().add(btnLogIntoAccount);
+		
+		JButton fanButton = new JButton("Proceed as fan");
+		fanButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				FanPage.main();
+			}
+		});
+		
+		fanButton.setBounds(118, 11, 170, 98);
+		frame.getContentPane().add(fanButton);
 		btnLogIntoAccount.addActionListener(new ActionListener() {
 
 			@Override

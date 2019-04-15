@@ -12,8 +12,8 @@ public class TableInfo {
 	private int goalDifference = 0;
 	private int points = 0;
 
-	public TableInfo(int gamesPlayed, String teamName, int wins, int draws, int losses, int goalsConceded,
-			int goalsScored, int goalDifference, int points) {
+	public TableInfo(String teamName, int gamesPlayed, int wins, int draws, int losses,
+			int goalsScored, int goalsConceded, int goalDifference, int points) {
 		super();
 
 		if (gamesPlayed < 0) {
