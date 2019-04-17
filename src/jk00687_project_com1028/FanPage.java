@@ -1,15 +1,24 @@
 package jk00687_project_com1028;
 
 import java.awt.EventQueue;
+import java.awt.TextArea;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.JFrame;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JTextArea;
 import javax.swing.JTextPane;
 
 public class FanPage {
@@ -37,7 +46,8 @@ public class FanPage {
 
 	/**
 	 * Create the application.
-	 * @throws FileNotFoundException 
+	 * 
+	 * @throws FileNotFoundException
 	 */
 	public FanPage() throws FileNotFoundException {
 		initialize();
@@ -45,9 +55,11 @@ public class FanPage {
 
 	/**
 	 * Initialize the contents of the frame.
-	 * @throws FileNotFoundException 
+	 * 
+	 * @throws FileNotFoundException
 	 */
 	private void initialize() throws FileNotFoundException {
+
 		frame = new JFrame();
 		frame.setBounds(100, 100, 450, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -57,30 +69,32 @@ public class FanPage {
 		lblFanView.setBounds(10, 11, 81, 14);
 		frame.getContentPane().add(lblFanView);
 
-		JTextPane tableStandings = new JTextPane();
-		tableStandings.setBounds(10, 101, 194, 149);
-		frame.getContentPane().add(tableStandings);
-		scan = new Scanner(new File("C:/Users/hunya/Documents/GitHub/COM1033_Assignment1/league_table.txt"));
 		showTable(tableInformation);
 
 		JLabel lblCurrentLeagueTable = new JLabel("Current League Table Standings");
 		lblCurrentLeagueTable.setBounds(23, 82, 194, 14);
 		frame.getContentPane().add(lblCurrentLeagueTable);
-		
-		JTextPane knockoutsStandings = new JTextPane();
-		knockoutsStandings.setBounds(227, 101, 197, 149);
-		frame.getContentPane().add(knockoutsStandings);
+
 		showKnockouts(knockoutTree);
-		
+
 		JLabel lblCurrentKnockoutsStadings = new JLabel("Current Knockouts Standings");
 		lblCurrentKnockoutsStadings.setBounds(247, 82, 177, 14);
 		frame.getContentPane().add(lblCurrentKnockoutsStadings);
-		
+
 	}
 
-	public String showKnockouts(List<KnockoutTree> knockoutTree) {
+	public void showKnockouts(List<KnockoutTree> knockoutTree) {
+		JTextArea knockoutsStandings = new JTextArea();
+		knockoutsStandings.setBounds(227, 101, 197, 149);
+		frame.getContentPane().add(knockoutsStandings);
 
-		return null;
+		try {
+			BufferedReader input = new BufferedReader(new InputStreamReader(
+					new FileInputStream("C:/Users/hunya/Documents/GitHub/COM1033_Assignment1/knockout_tree.txt")));
+			knockoutsStandings.read(input, "READING FILE :-)");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public String knockoutsSearch(List<KnockoutTree> knockoutTree) {
@@ -88,9 +102,18 @@ public class FanPage {
 		return null;
 	}
 
-	public String showTable(List<TableInfo> tableInformation) {
+	public void showTable(List<TableInfo> tableInformation) {
 
-		return null;
+		JTextArea tableStandings = new JTextArea();
+		tableStandings.setBounds(10, 101, 194, 149);
+		frame.getContentPane().add(tableStandings);
+		try {
+			BufferedReader input = new BufferedReader(new InputStreamReader(
+					new FileInputStream("C:/Users/hunya/Documents/GitHub/COM1033_Assignment1/league_table.txt")));
+			tableStandings.read(input, "READING FILE :-)");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public String tableSearch(List<TableInfo> tableInformation) {

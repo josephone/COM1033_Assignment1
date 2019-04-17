@@ -67,6 +67,7 @@ public class TableInfo {
 		}
 		
 	}
+	
 
 	public int getGamesPlayed() {
 		return gamesPlayed;
