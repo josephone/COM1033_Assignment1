@@ -6,6 +6,7 @@ import javax.swing.JFrame;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JLabel;
 
 public class LeagueDeveloperPage {
 
@@ -50,5 +51,9 @@ public class LeagueDeveloperPage {
 		});
 		btnTest.setBounds(118, 91, 173, 76);
 		frame.getContentPane().add(btnTest);
+		
+		JLabel lblLeagueDeveloperView = new JLabel("League developer view");
+		lblLeagueDeveloperView.setBounds(10, 11, 134, 14);
+		frame.getContentPane().add(lblLeagueDeveloperView);
 	}
 }

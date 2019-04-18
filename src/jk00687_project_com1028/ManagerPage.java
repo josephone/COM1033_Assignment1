@@ -4,6 +4,7 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 
 public class ManagerPage {
 
@@ -44,6 +45,10 @@ public class ManagerPage {
 		JButton btnManager = new JButton("Manager");
 		btnManager.setBounds(130, 83, 146, 83);
 		frame.getContentPane().add(btnManager);
+		
+		JLabel lblManagerView = new JLabel("Manager view");
+		lblManagerView.setBounds(10, 11, 93, 14);
+		frame.getContentPane().add(lblManagerView);
 	}
 
 }

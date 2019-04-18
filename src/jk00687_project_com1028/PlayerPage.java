@@ -1,9 +1,15 @@
 package jk00687_project_com1028;
 
 import java.awt.EventQueue;
+import java.awt.Font;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
 
 import javax.swing.JFrame;
 import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JTextArea;
 
 public class PlayerPage {
 
@@ -40,10 +46,32 @@ public class PlayerPage {
 		frame.setBounds(100, 100, 450, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
+
+		JLabel lblPlayerView = new JLabel("Player view");
+		lblPlayerView.setBounds(10, 11, 96, 14);
+		frame.getContentPane().add(lblPlayerView);
+
+		viewTeamStatistics();
+
+		JLabel lblTeamStatistics = new JLabel("Team statistics");
+		lblTeamStatistics.setBounds(10, 83, 96, 14);
+		frame.getContentPane().add(lblTeamStatistics);
+	}
+
+	public void viewTeamStatistics() {
 		
-		JButton btnPlayer = new JButton("Player");
-		btnPlayer.setBounds(138, 100, 157, 58);
-		frame.getContentPane().add(btnPlayer);
+		JTextArea teamStatistics = new JTextArea();
+		teamStatistics.setFont(new Font("Monospaced", Font.PLAIN, 10));
+		teamStatistics.setBounds(10, 108, 414, 142);
+		frame.getContentPane().add(teamStatistics);
+
+		try {
+			BufferedReader input = new BufferedReader(new InputStreamReader(
+					new FileInputStream("C:/Users/hunya/Documents/GitHub/COM1033_Assignment1/league_table.txt")));
+			teamStatistics.read(input, "");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 }
