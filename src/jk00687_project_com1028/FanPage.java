@@ -95,7 +95,7 @@ public class FanPage {
 		knockoutsStandings.setFont(new Font("Monospaced", Font.PLAIN, 10));
 		knockoutsStandings.setBounds(20, 299, 723, 149);
 		frame.getContentPane().add(knockoutsStandings);
-		
+
 		showKnockouts(knockoutsStandings);
 
 		JLabel lblCurrentKnockoutsStandings = new JLabel("Current Knockouts Standings");
@@ -132,7 +132,6 @@ public class FanPage {
 	}
 
 	public void showKnockouts(JTextArea knockoutsStandings) {
-		
 
 		try {
 			BufferedReader input = new BufferedReader(new InputStreamReader(
@@ -156,8 +155,9 @@ public class FanPage {
 	public void tableSearch(String teamName, JTextArea tableStandings) throws IOException {
 		tableStandings.setText(null);
 		FileReader file = new FileReader("C:/Users/hunya/Documents/GitHub/COM1033_Assignment1/league_table.txt");
-		String topRow = Files.readAllLines(Paths.get("C:/Users/hunya/Documents/GitHub/COM1033_Assignment1/league_table.txt")).get(0);
-		
+		String topRow = Files
+				.readAllLines(Paths.get("C:/Users/hunya/Documents/GitHub/COM1033_Assignment1/league_table.txt")).get(0);
+
 		BufferedReader buffer = new BufferedReader(file);
 
 		String line = buffer.readLine();
@@ -179,7 +179,7 @@ public class FanPage {
 
 		for (Map<String, Integer> mapAtRow : list) {
 			if (findTeam(teamName, tableStandings, mapAtRow)) {
-				tableStandings.setText(topRow + "\n"+ mapAtRow.toString());
+				tableStandings.setText(topRow + "\n" + mapAtRow.toString());
 			}
 		}
 	}

@@ -5,6 +5,8 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class ManagerPage {
 
@@ -42,8 +44,12 @@ public class ManagerPage {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
-		JButton btnManager = new JButton("Manager");
-		btnManager.setBounds(130, 83, 146, 83);
+		JButton btnManager = new JButton("Update team sheets");
+		btnManager.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		btnManager.setBounds(53, 209, 148, 23);
 		frame.getContentPane().add(btnManager);
 		
 		JLabel lblManagerView = new JLabel("Manager view");

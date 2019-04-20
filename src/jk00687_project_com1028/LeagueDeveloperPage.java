@@ -98,6 +98,7 @@ public class LeagueDeveloperPage {
 		JButton updateTableBtn = new JButton("Update tables");
 		updateTableBtn.setBounds(10, 215, 114, 23);
 		frame.getContentPane().add(updateTableBtn);
+		
 		updateTableBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				String teamNameString = teamName.getText();
@@ -108,13 +109,30 @@ public class LeagueDeveloperPage {
 				JOptionPane.showMessageDialog(null, "Tables successfully updated");
 			}
 		});
+		
+
+		JButton editStatsBtn = new JButton("Edit statistics");
+		editStatsBtn.setBounds(262, 215, 134, 23);
+		frame.getContentPane().add(editStatsBtn);
+		editStatsBtn.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				EditStats.main();
+				frame.dispose();
+			}
+			
+		});
 
 	}
 
 	public void updateTable(String teamNameFinal, String matchResultFinal, String goalsScoredFinal, String goalsConcededFinal)
 			throws IllegalArgumentException {
+		
+		// TODO: INCREMENT GAMES PLAYED, MOVE TEAMS HIGHER OR LOWER DEPENDING ON THEIR POINTS
 
 		String file_name = "C:/Users/hunya/Documents/GitHub/COM1033_Assignment1/league_table_test.txt";
+		String RegExPattern = "[a-zA-Z]*,[\t]{2},[0-9]*";
 		try {
 			FileWriter write = new FileWriter(file_name, true);
 			BufferedWriter writeBuffer = new BufferedWriter(write);

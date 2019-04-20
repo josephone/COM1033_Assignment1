@@ -43,7 +43,7 @@ public class PlayerPage {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 450, 300);
+		frame.setBounds(100, 100, 320, 302);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 
@@ -59,16 +59,15 @@ public class PlayerPage {
 	}
 
 	public void viewTeamStatistics() {
-		
+
 		JTextArea teamStatistics = new JTextArea();
 		teamStatistics.setFont(new Font("Monospaced", Font.PLAIN, 10));
-		teamStatistics.setBounds(10, 108, 414, 142);
+		teamStatistics.setBounds(10, 108, 196, 142);
 		frame.getContentPane().add(teamStatistics);
 
 		try {
-			BufferedReader input = new BufferedReader(new InputStreamReader(
-					new FileInputStream("C:/Users/hunya/Documents/GitHub/COM1033_Assignment1/league_table.txt")));
-			teamStatistics.read(input, "");
+			teamStatistics.setText(
+					"Total goals scored: " + "\n" + "Total goals conceded: " + "\n" + "Overall goal difference: ");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
