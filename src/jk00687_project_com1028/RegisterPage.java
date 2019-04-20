@@ -96,10 +96,10 @@ public class RegisterPage {
 				String password = passwordChoice.getText();
 
 				try {
-
 					registerAccount(username, password, role);
 					JOptionPane.showMessageDialog(null, "Registration successful");
-
+					LogOnPage.main();
+					frame.dispose();
 				} catch (ClassNotFoundException e) {
 					e.printStackTrace();
 

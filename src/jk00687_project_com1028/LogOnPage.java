@@ -86,12 +86,15 @@ public class LogOnPage {
 						switch (checkRole(username)) {
 						case "League developer":
 							LeagueDeveloperPage.main();
+							frame.dispose();
 							break;
 						case "Manager":
 							ManagerPage.main();
+							frame.dispose();
 							break;
 						case "Player":
 							PlayerPage.main();
+							frame.dispose();
 							break;
 
 						default:

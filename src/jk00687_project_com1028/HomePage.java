@@ -51,6 +51,7 @@ public class HomePage {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				RegisterPage.main();
+				frame.dispose();
 				
 			}
 			
@@ -66,6 +67,7 @@ public class HomePage {
 			public void actionPerformed(ActionEvent arg0) {
 				
 				FanPage.main();
+				frame.dispose();
 			}
 		});
 		
@@ -76,6 +78,7 @@ public class HomePage {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				LogOnPage.main();
+				frame.dispose();
 				
 			}
 			
