@@ -132,7 +132,7 @@ public class LeagueDeveloperPage {
 		// TODO: INCREMENT GAMES PLAYED, MOVE TEAMS HIGHER OR LOWER DEPENDING ON THEIR POINTS
 
 		String file_name = "C:/Users/hunya/Documents/GitHub/COM1033_Assignment1/league_table_test.txt";
-		String RegExPattern = "[a-zA-Z]*,[\t]{2},[0-9]*";
+		String RegExPattern = "[a-zA-Z]+[\\t]{2}[0-9]+";
 		try {
 			FileWriter write = new FileWriter(file_name, true);
 			BufferedWriter writeBuffer = new BufferedWriter(write);

@@ -3,6 +3,9 @@ package jk00687_project_com1028;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -94,7 +97,12 @@ public class EditStats {
 				String goalsScoredString = goalsScored.getText();
 				String goalsConcededString = goalsConceded.getText();
 				
-				updateStatistics(teamNameString, goalsScoredString, goalsConcededString);
+				try {
+					updateStatistics(teamNameString, goalsScoredString, goalsConcededString);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				JOptionPane.showMessageDialog(null, "Statistics updated");
 				LeagueDeveloperPage.main();
 				frame.dispose();
@@ -103,7 +111,10 @@ public class EditStats {
 		});
 	}
 	
-	public void updateStatistics(String teamName, String goalsScored, String goalsConceded) {
+	public void updateStatistics(String teamName, String goalsScored, String goalsConceded) throws IOException {
+		String file_name = "C:/Users/hunya/Documents/GitHub/COM1033_Assignment1/team_statistics.txt";
+		FileWriter write = new FileWriter(file_name, true);
+		BufferedWriter writeBuffer = new BufferedWriter(write);
 		
 	}
 
