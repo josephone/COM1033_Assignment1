@@ -7,10 +7,12 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JTextField;
 
 public class ManagerPage {
 
 	private JFrame frame;
+	private JTextField teamName;
 
 	/**
 	 * Launch the application.
@@ -47,6 +49,8 @@ public class ManagerPage {
 		JButton btnManager = new JButton("Update team sheets");
 		btnManager.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
+				updateTeamSheets();
 			}
 		});
 		btnManager.setBounds(53, 209, 148, 23);
@@ -55,6 +59,19 @@ public class ManagerPage {
 		JLabel lblManagerView = new JLabel("Manager view");
 		lblManagerView.setBounds(10, 11, 93, 14);
 		frame.getContentPane().add(lblManagerView);
+		
+		JLabel lblEnterTeamName = new JLabel("Enter team name:");
+		lblEnterTeamName.setBounds(10, 56, 105, 14);
+		frame.getContentPane().add(lblEnterTeamName);
+		
+		teamName = new JTextField();
+		teamName.setBounds(115, 53, 86, 20);
+		frame.getContentPane().add(teamName);
+		teamName.setColumns(10);
+	}
+	
+	public void updateTeamSheets() {
+		
 	}
 
 }

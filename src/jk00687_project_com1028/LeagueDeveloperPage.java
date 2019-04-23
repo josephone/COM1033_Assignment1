@@ -12,6 +12,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Scanner;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -141,17 +143,18 @@ public class LeagueDeveloperPage {
 		// TODO: INCREMENT GAMES PLAYED, MOVE TEAMS HIGHER OR LOWER DEPENDING ON THEIR
 		// POINTS
 
-		String file_name = "C:/Users/hunya/Documents/GitHub/COM1033_Assignment1/league_table_test.txt";
+		String file_name = "C:/Users/hunya/Documents/GitHub/COM1033_Assignment1/league_table.txt";
 		String RegExPattern = "[a-zA-Z]+[\\t]{2}[0-9]+";
 		
 		FileWriter write = new FileWriter(file_name, true);
 		BufferedWriter writeBuffer = new BufferedWriter(write);
+		BufferedReader br = new BufferedReader(new FileReader(file_name));
 		String newLine = System.getProperty("line.separator");
 		
 		if (checkTeamExists(teamNameFinal)) {
 			
-			System.out.println("Team already exists");
-
+			//TODO: UPDATE TABLE IF TEAM EXISTS ALREADY
+			
 		} else {
 
 			try {
@@ -200,8 +203,9 @@ public class LeagueDeveloperPage {
 		}
 	}
 
+
 	public boolean checkTeamExists(String teamName) throws IOException {
-		File f1 = new File("C:/Users/hunya/Documents/GitHub/COM1033_Assignment1/league_table_test.txt"); // Creation of
+		File f1 = new File("C:/Users/hunya/Documents/GitHub/COM1033_Assignment1/league_table.txt"); // Creation of
 																											// File
 																											// Descriptor
 																											// for input
@@ -214,7 +218,7 @@ public class LeagueDeveloperPage {
 		int count = 0; // Intialize the word to zero
 		while ((s = br.readLine()) != null) // Reading Content from the file
 		{
-			words = s.split("\t"); // Split the word using space
+			words = s.split("\t"); // Split the word using tabs
 			for (String word : words) {
 				if (word.equals(input)) // Search for the given word
 				{
