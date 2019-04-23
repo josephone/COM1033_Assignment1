@@ -1,2 +1,3 @@
 Team name	Total goals scored	Total goals conceded	Overall goal difference
 Chelsea		34			12			22
+Arsenal		43			14			29
