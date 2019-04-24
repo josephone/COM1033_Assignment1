@@ -5,7 +5,12 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.event.ActionListener;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
 
@@ -105,7 +110,13 @@ public class ManagerPage {
 				String midfielderNameString = midfielderName.getText();
 				String attackerNameString = attackerName.getText();
 				
-				updateTeamSheets(teamNameString, goalkeeperNameString, defenderNameString, midfielderNameString, attackerNameString);
+				try {
+					updateTeamSheets(teamNameString, goalkeeperNameString, defenderNameString, midfielderNameString, attackerNameString);
+					JOptionPane.showMessageDialog(null, "Team sheet updated");
+				} catch (FileNotFoundException | UnsupportedEncodingException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		});
 		
@@ -119,7 +130,15 @@ public class ManagerPage {
 		
 	}
 	
-	public void updateTeamSheets(String teamName, String goalkeeperName, String defenderName, String midfielderName, String attackerName) {
+	public void updateTeamSheets(String teamName, String goalkeeperName, String defenderName, String midfielderName, String attackerName) throws FileNotFoundException, UnsupportedEncodingException {
+		
+		
+		PrintWriter writer = new PrintWriter("C:/Users/hunya/Documents/GitHub/COM1033_Assignment1/" + teamName + "TeamSheet.txt", "UTF-8");
+		writer.println("Gaolkeeper: " + goalkeeperName);
+		writer.println("Defenders: " + defenderName);
+		writer.println("Midfielders: " + midfielderName);
+		writer.println("Attackers: " + attackerName);
+		writer.close();
 		
 	}
 

@@ -102,7 +102,7 @@ public class PlayerPage {
 		
 		JTextArea teamStatistics = new JTextArea();
 		teamStatistics.setFont(new Font("Monospaced", Font.PLAIN, 10));
-		teamStatistics.setBounds(10, 180, 340, 70);
+		teamStatistics.setBounds(10, 180, 340, 72);
 		frame.getContentPane().add(teamStatistics);
 		
 		if(checkTeamExists(teamNameString)) {
