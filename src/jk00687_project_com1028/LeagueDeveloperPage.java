@@ -160,7 +160,11 @@ public class LeagueDeveloperPage {
 			try {
 
 				writeBuffer.write(newLine);
-				writeBuffer.write(teamNameFinal + "\t" + "\t");
+				if (teamNameFinal.length() < 8) {
+					writeBuffer.write(teamNameFinal + "\t" + "\t");
+				}else {
+					writeBuffer.write(teamNameFinal + "\t");
+				}
 				writeBuffer.write("1" + "\t" + "\t");
 				if (matchResultFinal.equals("Win")) {
 					writeBuffer.write("1" + "\t");
