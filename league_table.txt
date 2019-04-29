@@ -2,3 +2,5 @@ Team name	Games played 	Wins 	Draws	Losses	Goals Scored	Goals Conceded	Goal Diff
 Ali Baba FC	1		1	0	0	2		0		2		3
 Chelsea		1		0	0	1	0		2		-2		0
 Valencia	1		1	0	0	9		5		4		3
+Oldham		1		0	0	1	0		50		-50		0
+Hong		1		0	0	1	0		20000		-20000		0

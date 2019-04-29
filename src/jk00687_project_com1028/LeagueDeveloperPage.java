@@ -115,7 +115,6 @@ public class LeagueDeveloperPage {
 
 					JOptionPane.showMessageDialog(null, "Tables successfully updated");
 				} catch (IllegalArgumentException | IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 					JOptionPane.showMessageDialog(null, "Tables could not be updated");
 				}
@@ -144,7 +143,7 @@ public class LeagueDeveloperPage {
 		// POINTS
 
 		String file_name = "C:/Users/hunya/Documents/GitHub/COM1033_Assignment1/league_table.txt";
-		String RegExPattern = "[a-zA-Z]+[\\t]{2}[0-9]+";
+		String RegExPattern = "[a-zA-Z]+[\t]{2}[0-9]+";
 		
 		FileWriter write = new FileWriter(file_name, true);
 		BufferedWriter writeBuffer = new BufferedWriter(write);
