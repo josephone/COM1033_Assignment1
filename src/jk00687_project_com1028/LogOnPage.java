@@ -3,8 +3,10 @@ package jk00687_project_com1028;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -113,15 +115,21 @@ public class LogOnPage {
 
 		});
 	}
+	
 
 	public boolean checkExists(String username, String password) throws SQLException {
+	
 		Connection conn = DriverManager.getConnection(
 				"jdbc:mysql://localhost:3306/users?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC",
 				"root", "password");
 		Statement stmt = conn.createStatement();
-		String SQL = "select * from users where username = '" + username + "' and password = '" + password + "';";
-
-		ResultSet rset = stmt.executeQuery(SQL);
+		
+		String SQL = "select * from users where username = ? and password = ? ";
+		PreparedStatement preparedStatement = conn.prepareStatement(SQL);
+		preparedStatement.setString(1, username);
+		preparedStatement.setString(2, password);
+		
+		ResultSet rset = preparedStatement.executeQuery();
 
 		if (rset.next()) {
 			return true;
@@ -139,6 +147,7 @@ public class LogOnPage {
 		Statement stmt = conn.createStatement();
 
 		ResultSet result = stmt.executeQuery(SQL);
+
 		
 		result.beforeFirst();
 		result.next();
