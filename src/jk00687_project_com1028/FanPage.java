@@ -178,6 +178,7 @@ public class FanPage {
 		}
 
 		for (Map<String, Integer> mapAtRow : list) {
+			System.out.println(mapAtRow);
 			if (findTeam(teamName, tableStandings, mapAtRow)) {
 				tableStandings.setText(topRow + "\n" + mapAtRow.toString());
 			}
