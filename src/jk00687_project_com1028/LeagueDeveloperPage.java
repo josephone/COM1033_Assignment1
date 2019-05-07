@@ -239,16 +239,86 @@ public class LeagueDeveloperPage {
 					stmt.executeUpdate(insertdata);
 
 				} else if (matchResultFinal.equals("Draw")) {
-					String insertdata = "INSERT INTO leaguestandings VALUES ('" + teamNameFinal
-							+ "','1', '0', '1', '0', '" + goalsScoredFinal + "', '" + goalsConcededFinal + "', '"
-							+ goalDifference + "', '1');";
+					
 
+
+					String currentDraws = "SELECT Wins FROM leaguestandings WHERE TeamName = '" + teamNameFinal + "';";
+					ResultSet currentDrawsResult = stmt.executeQuery(currentDraws);
+					String cdr = null;
+					if (currentDrawsResult.next()) {
+						cdr = currentDrawsResult.getString("Draws");
+					}
+					int draws = Integer.valueOf(cdr);
+					int newDraws = draws + 1;
+
+					String goalsConceded = "SELECT GoalsConceded FROM leaguestandings WHERE TeamName = '"
+							+ teamNameFinal + "';";
+					
+					ResultSet goalsConcededResult = stmt.executeQuery(goalsConceded);
+					String gcr = null;
+					if (goalsConcededResult.next()) {
+						gcr = goalsConcededResult.getString("GoalsConceded");
+					}
+					
+					int currentGoalsConceded = Integer.valueOf(gcr);
+
+					int newGoalsConceded = goalCon + currentGoalsConceded;
+
+					int newGoalDifference = newGoalsScored - newGoalsConceded;
+
+					String points = "SELECT Points FROM leaguestandings WHERE TeamName = '" + teamNameFinal + "';";
+					ResultSet pointsResult = stmt.executeQuery(points);
+					String pr = null;
+					if(pointsResult.next()) {
+						pr = pointsResult.getString("Points");
+					}
+					int newPoints = Integer.valueOf(pr) + 1;
+
+					String insertdata = "UPDATE leaguestandings SET GamesPlayed = '" + newGamesPlayed + "', Draws = '"
+							+ newDraws + "', GoalsScored = '" + newGoalsScored + "', GoalsConceded = '"
+							+ newGoalsConceded + "', GoalDifference = '" + newGoalDifference + "', Points = '"
+							+ newPoints + "' WHERE TeamName = '"+ teamNameFinal + "';";
+				
 					stmt.executeUpdate(insertdata);
 
 				} else if (matchResultFinal.equals("Loss")) {
-					String insertdata = "INSERT INTO leaguestandings VALUES ('" + teamNameFinal
-							+ "','1', '0', '0', '1', '" + goalsScoredFinal + "', '" + goalsConcededFinal + "', '"
-							+ goalDifference + "', '0');";
+
+					String currentLosses = "SELECT Losses FROM leaguestandings WHERE TeamName = '" + teamNameFinal + "';";
+					ResultSet currentLossesResult = stmt.executeQuery(currentLosses);
+					String clr = null;
+					if (currentLossesResult.next()) {
+						clr = currentLossesResult.getString("Losses");
+					}
+					int losses = Integer.valueOf(clr);
+					int newLosses = losses + 1;
+
+					String goalsConceded = "SELECT GoalsConceded FROM leaguestandings WHERE TeamName = '"
+							+ teamNameFinal + "';";
+					
+					ResultSet goalsConcededResult = stmt.executeQuery(goalsConceded);
+					String gcr = null;
+					if (goalsConcededResult.next()) {
+						gcr = goalsConcededResult.getString("GoalsConceded");
+					}
+					
+					int currentGoalsConceded = Integer.valueOf(gcr);
+
+					int newGoalsConceded = goalCon + currentGoalsConceded;
+
+					int newGoalDifference = newGoalsScored - newGoalsConceded;
+
+					String points = "SELECT Points FROM leaguestandings WHERE TeamName = '" + teamNameFinal + "';";
+					ResultSet pointsResult = stmt.executeQuery(points);
+					String pr = null;
+					if(pointsResult.next()) {
+						pr = pointsResult.getString("Points");
+					}
+					int newPoints = Integer.valueOf(pr) + 0;
+
+					String insertdata = "UPDATE leaguestandings SET GamesPlayed = '" + newGamesPlayed + "', Losses = '"
+							+ newLosses + "', GoalsScored = '" + newGoalsScored + "', GoalsConceded = '"
+							+ newGoalsConceded + "', GoalDifference = '" + newGoalDifference + "', Points = '"
+							+ newPoints + "' WHERE TeamName = '"+ teamNameFinal + "';";
 
 					stmt.executeUpdate(insertdata);
 
