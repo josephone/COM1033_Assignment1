@@ -129,6 +129,10 @@ public class FanPage {
 		frame.getContentPane().add(tableKnockouts);
 
 		showKnockouts(tableKnockouts);
+		
+		JLabel lblTeamName = new JLabel("Team Name   Games Played   Wins                 Draws            Losses        Goals Scored    Goals Conceded Goal Difference   Points");
+		lblTeamName.setBounds(20, 103, 723, 14);
+		frame.getContentPane().add(lblTeamName);
 
 		btnSearch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -137,6 +141,12 @@ public class FanPage {
 				try {
 					tableSearch(teamNameChoice, leagueTable);
 				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
@@ -176,19 +186,39 @@ public class FanPage {
 					showTableOverall.getString("Points") };
 
 			tableModel.addRow(topRow);
-
 		}
-
-		/*
-		 * try { BufferedReader input = new BufferedReader(new InputStreamReader( new
-		 * FileInputStream(
-		 * "C:/Users/hunya/Documents/GitHub/COM1033_Assignment1/league_table.txt")));
-		 * tableStandings.read(input, ""); } catch (Exception e) { e.printStackTrace();
-		 * }
-		 */
+		
 	}
 
-	public void tableSearch(String teamName, JTable tableStandings) throws IOException {
+	public void tableSearch(String teamName, JTable tableStandings) throws IOException, ClassNotFoundException, SQLException {
+		
+		Class.forName("com.mysql.cj.jdbc.Driver");
+
+		Connection conn = DriverManager.getConnection(
+				"jdbc:mysql://localhost/users?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC", "root",
+				"password");
+
+		Statement stmt = conn.createStatement();
+		
+		String query = "SELECT * FROM leagueStandings WHERE TeamName = '" + teamName + "';";
+		String q = null;
+		
+		ResultSet queryResult = stmt.executeQuery(query);
+		
+		for( int i = tableModel.getRowCount() - 1; i >= 0; i-- ) {
+	        tableModel.removeRow(i);
+	    }
+		
+		while (queryResult.next()) {
+			String[] topRow = { queryResult.getString("TeamName"), queryResult.getString("GamesPlayed"),
+					queryResult.getString("Wins"), queryResult.getString("Draws"),
+					queryResult.getString("Losses"), queryResult.getString("GoalsScored"),
+					queryResult.getString("GoalsConceded"), queryResult.getString("GoalDifference"),
+					queryResult.getString("Points") };
+
+			tableModel.addRow(topRow);
+		}
+		
 		/*
 		 * FileReader file = new FileReader(
 		 * "C:/Users/hunya/Documents/GitHub/COM1033_Assignment1/league_table.txt");
