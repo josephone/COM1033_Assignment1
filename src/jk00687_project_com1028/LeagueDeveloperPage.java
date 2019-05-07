@@ -170,8 +170,6 @@ public class LeagueDeveloperPage {
 
 			if (checkTeamExists(teamNameFinal)) {
 
-				// TODO: UPDATE TABLE IF TEAM EXISTS ALREADY
-
 				int goalSc = Integer.valueOf(goalsScoredFinal);
 				int goalCon = Integer.valueOf(goalsConcededFinal);
 				int goalDifference = goalSc - goalCon;
@@ -337,35 +335,7 @@ public class LeagueDeveloperPage {
 					newTeamInput(teamNameFinal, matchResultFinal, goalsScoredFinal, goalsConcededFinal);
 
 				}
-				/*
-				 * 
-				 * writeBuffer.write(newLine); if (teamNameFinal.length() < 8) {
-				 * writeBuffer.write(teamNameFinal + "\t" + "\t"); } else {
-				 * writeBuffer.write(teamNameFinal + "\t"); } writeBuffer.write("1" + "\t" +
-				 * "\t"); if (matchResultFinal.equals("Win")) { writeBuffer.write("1" + "\t");
-				 * writeBuffer.write("0" + "\t"); writeBuffer.write("0" + "\t"); } else if
-				 * (matchResultFinal.equals("Draw")) { writeBuffer.write("0" + "\t");
-				 * writeBuffer.write("1" + "\t"); writeBuffer.write("0" + "\t"); } else if
-				 * (matchResultFinal.equals("Loss")) { writeBuffer.write("0" + "\t");
-				 * writeBuffer.write("0" + "\t"); writeBuffer.write("1" + "\t"); } else { throw
-				 * new IllegalArgumentException("Result must be a 'Win', 'Draw' or 'Loss'"); }
-				 * 
-				 * writeBuffer.write(goalsScoredFinal + "\t" + "\t");
-				 * writeBuffer.write(goalsConcededFinal + "\t" + "\t");
-				 * 
-				 * int goalSc = Integer.valueOf(goalsScoredFinal); int goalCon =
-				 * Integer.valueOf(goalsConcededFinal); int goalDifference = goalSc - goalCon;
-				 * 
-				 * writeBuffer.write(goalDifference + "\t" + "\t");
-				 * 
-				 * if (matchResultFinal.equals("Win")) { writeBuffer.write("3"); } else if
-				 * (matchResultFinal.equals("Draw")) { writeBuffer.write("1"); } else if
-				 * (matchResultFinal.equals("Loss")) { writeBuffer.write("0"); } else { throw
-				 * new IllegalArgumentException(); } writeBuffer.close(); } catch (IOException
-				 * e) {
-				 * 
-				 * }
-				 */
+				
 				finally {
 
 				}
@@ -389,22 +359,6 @@ public class LeagueDeveloperPage {
 			return false;
 		}
 	}
-
-	/*
-	 * public boolean checkTeamExists(String teamName) throws IOException { File f1
-	 * = new
-	 * File("C:/Users/hunya/Documents/GitHub/COM1033_Assignment1/league_table.txt");
-	 * // Creation of // File // Descriptor // for input // file String[] words =
-	 * null; // Intialize the word Array FileReader fr = new FileReader(f1); //
-	 * Creation of File Reader object BufferedReader br = new BufferedReader(fr); //
-	 * Creation of BufferedReader object String s; String input = teamName; // Input
-	 * word to be searched int count = 0; // Intialize the word to zero while ((s =
-	 * br.readLine()) != null) // Reading Content from the file { words =
-	 * s.split("\t"); // Split the word using tabs for (String word : words) { if
-	 * (word.equals(input)) // Search for the given word { count++; // If Present
-	 * increase the count by one } } } if (count != 0) // Check for count not equal
-	 * to zero { return true; } else { return false; } }
-	 */
 
 	public void newTeamInput(String teamNameFinal, String matchResultFinal, String goalsScoredFinal,
 			String goalsConcededFinal) throws SQLException {

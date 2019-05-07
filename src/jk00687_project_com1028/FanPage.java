@@ -12,6 +12,11 @@ import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,16 +31,25 @@ import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JTextArea;
 import javax.swing.JTextPane;
+import javax.swing.table.DefaultTableModel;
+
 import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
+import javax.swing.JTable;
 
 public class FanPage {
 
 	private Scanner scan;
 	private JFrame frame;
 	private JTextField teamName;
+	private String[] headers = { "Team Name", "Games Played", "Wins", "Draws", "Losses", "Goals Scored",
+			"Goals Conceded", "Goal Difference", "Points" };
+	DefaultTableModel tableModel = new DefaultTableModel(headers, 0);
+	private JTable leagueTable;
+	private JTable table_1;
+	private JTable tableKnockouts;
 
 	/**
 	 * Launch the application.
@@ -57,8 +71,10 @@ public class FanPage {
 	 * Create the application.
 	 * 
 	 * @throws FileNotFoundException
+	 * @throws SQLException
+	 * @throws ClassNotFoundException
 	 */
-	public FanPage() throws FileNotFoundException {
+	public FanPage() throws FileNotFoundException, ClassNotFoundException, SQLException {
 		initialize();
 	}
 
@@ -66,8 +82,10 @@ public class FanPage {
 	 * Initialize the contents of the frame.
 	 * 
 	 * @throws FileNotFoundException
+	 * @throws SQLException
+	 * @throws ClassNotFoundException
 	 */
-	private void initialize() throws FileNotFoundException {
+	private void initialize() throws FileNotFoundException, ClassNotFoundException, SQLException {
 
 		frame = new JFrame();
 		frame.setBounds(100, 100, 769, 498);
@@ -78,23 +96,16 @@ public class FanPage {
 		lblFanView.setBounds(20, 7, 81, 14);
 		frame.getContentPane().add(lblFanView);
 
-		JTextArea tableStandings = new JTextArea();
-		tableStandings.setFont(new Font("Monospaced", Font.PLAIN, 10));
-		tableStandings.setBounds(20, 101, 723, 162);
-		frame.getContentPane().add(tableStandings);
-
-		showTable(tableStandings);
-
 		JLabel lblCurrentLeagueTable = new JLabel("Current League Table Standings");
 		lblCurrentLeagueTable.setBounds(23, 82, 194, 14);
 		frame.getContentPane().add(lblCurrentLeagueTable);
 
-		JTextArea knockoutsStandings = new JTextArea();
-		knockoutsStandings.setFont(new Font("Monospaced", Font.PLAIN, 10));
-		knockoutsStandings.setBounds(20, 299, 723, 149);
-		frame.getContentPane().add(knockoutsStandings);
+		leagueTable = new JTable();
+		leagueTable.setBounds(20, 118, 723, 149);
+		frame.getContentPane().add(leagueTable);
 
-		showKnockouts(knockoutsStandings);
+		leagueTable.setModel(tableModel);
+		showTable(leagueTable);
 
 		JLabel lblCurrentKnockoutsStandings = new JLabel("Current Knockouts Standings");
 		lblCurrentKnockoutsStandings.setBounds(23, 274, 177, 14);
@@ -113,12 +124,18 @@ public class FanPage {
 		btnSearch.setBounds(498, 40, 221, 32);
 		frame.getContentPane().add(btnSearch);
 
+		tableKnockouts = new JTable();
+		tableKnockouts.setBounds(20, 310, 723, 138);
+		frame.getContentPane().add(tableKnockouts);
+
+		showKnockouts(tableKnockouts);
+
 		btnSearch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 
 				String teamNameChoice = teamName.getText();
 				try {
-					tableSearch(teamNameChoice, tableStandings);
+					tableSearch(teamNameChoice, leagueTable);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -129,61 +146,77 @@ public class FanPage {
 
 	}
 
-	public void showKnockouts(JTextArea knockoutsStandings) {
-
-		try {
-			BufferedReader input = new BufferedReader(new InputStreamReader(
-					new FileInputStream("C:/Users/hunya/Documents/GitHub/COM1033_Assignment1/knockout_tree.txt")));
-			knockoutsStandings.read(input, "");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	public void showKnockouts(JTable tableKnockouts) {
+		/*
+		 * try { BufferedReader input = new BufferedReader(new InputStreamReader( new
+		 * FileInputStream(
+		 * "C:/Users/hunya/Documents/GitHub/COM1033_Assignment1/knockout_tree.txt")));
+		 * table2.read(input, ""); } catch (Exception e) { e.printStackTrace(); }
+		 */
 	}
 
-	public void showTable(JTextArea tableStandings) {
-		try {
-			BufferedReader input = new BufferedReader(new InputStreamReader(
-					new FileInputStream("C:/Users/hunya/Documents/GitHub/COM1033_Assignment1/league_table.txt")));
-			tableStandings.read(input, "");
-		} catch (Exception e) {
-			e.printStackTrace();
+	public void showTable(JTable leagueTableStandings) throws SQLException, ClassNotFoundException {
+		Class.forName("com.mysql.cj.jdbc.Driver");
+
+		Connection conn = DriverManager.getConnection(
+				"jdbc:mysql://localhost/users?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC", "root",
+				"password");
+
+		Statement stmt = conn.createStatement();
+
+		String showtable = "SELECT * FROM leaguestandings;";
+		String st = null;
+		ResultSet showTableOverall = stmt.executeQuery(showtable);
+		while (showTableOverall.next()) {
+
+			String[] topRow = { showTableOverall.getString("TeamName"), showTableOverall.getString("GamesPlayed"),
+					showTableOverall.getString("Wins"), showTableOverall.getString("Draws"),
+					showTableOverall.getString("Losses"), showTableOverall.getString("GoalsScored"),
+					showTableOverall.getString("GoalsConceded"), showTableOverall.getString("GoalDifference"),
+					showTableOverall.getString("Points") };
+
+			tableModel.addRow(topRow);
+
 		}
+
+		/*
+		 * try { BufferedReader input = new BufferedReader(new InputStreamReader( new
+		 * FileInputStream(
+		 * "C:/Users/hunya/Documents/GitHub/COM1033_Assignment1/league_table.txt")));
+		 * tableStandings.read(input, ""); } catch (Exception e) { e.printStackTrace();
+		 * }
+		 */
 	}
 
-	public void tableSearch(String teamName, JTextArea tableStandings) throws IOException {
-		tableStandings.setText(null);
-		FileReader file = new FileReader("C:/Users/hunya/Documents/GitHub/COM1033_Assignment1/league_table.txt");
-		String topRow = Files
-				.readAllLines(Paths.get("C:/Users/hunya/Documents/GitHub/COM1033_Assignment1/league_table.txt")).get(0);
-
-		BufferedReader buffer = new BufferedReader(file);
-
-		String line = buffer.readLine();
-
-		List<Map<String, Integer>> list = new ArrayList<>();
-
-		while (line != null) {
-			Map<String, Integer> hash = new HashMap<String, Integer>();
-			String[] words = line.split("  ");
-
-			for (String s : words) {
-				Integer i = hash.get(s);
-				hash.put(s, (i == null) ? 1 : i + 1);
-			}
-
-			line = buffer.readLine();
-			list.add(hash);
-		}
-
-		for (Map<String, Integer> mapAtRow : list) {
-			System.out.println(mapAtRow);
-			if (findTeam(teamName, tableStandings, mapAtRow)) {
-				tableStandings.setText(topRow + "\n" + mapAtRow.toString());
-			}
-		}
+	public void tableSearch(String teamName, JTable tableStandings) throws IOException {
+		/*
+		 * FileReader file = new FileReader(
+		 * "C:/Users/hunya/Documents/GitHub/COM1033_Assignment1/league_table.txt");
+		 * String topRow = Files .readAllLines(Paths.get(
+		 * "C:/Users/hunya/Documents/GitHub/COM1033_Assignment1/league_table.txt")).get(
+		 * 0);
+		 * 
+		 * BufferedReader buffer = new BufferedReader(file);
+		 * 
+		 * String line = buffer.readLine();
+		 * 
+		 * List<Map<String, Integer>> list = new ArrayList<>();
+		 * 
+		 * while (line != null) { Map<String, Integer> hash = new HashMap<String,
+		 * Integer>(); String[] words = line.split("  ");
+		 * 
+		 * for (String s : words) { Integer i = hash.get(s); hash.put(s, (i == null) ? 1
+		 * : i + 1); }
+		 * 
+		 * line = buffer.readLine(); list.add(hash); }
+		 * 
+		 * for (Map<String, Integer> mapAtRow : list) { System.out.println(mapAtRow); if
+		 * (findTeam(teamName, table, mapAtRow)) { table.setText(topRow + "\n" +
+		 * mapAtRow.toString()); } }
+		 */
 	}
 
-	public boolean findTeam(String teamName, JTextArea tableStandings, Map<String, Integer> MapAtRow) {
+	public boolean findTeam(String teamName, JTable table2, Map<String, Integer> MapAtRow) {
 
 		String content = MapAtRow.toString();
 		String pattern = teamName;
@@ -192,11 +225,9 @@ public class FanPage {
 		Matcher matcher = patternString.matcher(content);
 
 		if (matcher.find()) {
-			tableStandings.setText(null);
 			return true;
 		} else {
 			return false;
 		}
 	}
-
 }
