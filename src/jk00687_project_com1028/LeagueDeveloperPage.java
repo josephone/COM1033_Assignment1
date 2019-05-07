@@ -13,6 +13,11 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Scanner;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
@@ -117,6 +122,12 @@ public class LeagueDeveloperPage {
 				} catch (IllegalArgumentException | IOException e) {
 					e.printStackTrace();
 					JOptionPane.showMessageDialog(null, "Tables could not be updated");
+				} catch (ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 			}
 		});
@@ -137,104 +148,221 @@ public class LeagueDeveloperPage {
 	}
 
 	public void updateTable(String teamNameFinal, String matchResultFinal, String goalsScoredFinal,
-			String goalsConcededFinal) throws IllegalArgumentException, IOException {
+			String goalsConcededFinal)
+			throws IllegalArgumentException, IOException, ClassNotFoundException, SQLException {
 
 		// TODO: INCREMENT GAMES PLAYED, MOVE TEAMS HIGHER OR LOWER DEPENDING ON THEIR
 		// POINTS
 
 		String file_name = "C:/Users/hunya/Documents/GitHub/COM1033_Assignment1/league_table.txt";
 		String RegExPattern = "[a-zA-Z]+[\t]{2}[0-9]+";
-		
+
 		FileWriter write = new FileWriter(file_name, true);
 		BufferedWriter writeBuffer = new BufferedWriter(write);
 		BufferedReader br = new BufferedReader(new FileReader(file_name));
 		String newLine = System.getProperty("line.separator");
-		
-		if (checkTeamExists(teamNameFinal)) {
-			
-			//TODO: UPDATE TABLE IF TEAM EXISTS ALREADY
-			
-			
-		} else {
 
-			try {
+		Class.forName("com.mysql.cj.jdbc.Driver");
+		try (Connection conn = DriverManager.getConnection(
+				"jdbc:mysql://localhost/users?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC", "root",
+				"password")) {
+			Statement stmt = conn.createStatement();
 
-				writeBuffer.write(newLine);
-				if (teamNameFinal.length() < 8) {
-					writeBuffer.write(teamNameFinal + "\t" + "\t");
-				}else {
-					writeBuffer.write(teamNameFinal + "\t");
-				}
-				writeBuffer.write("1" + "\t" + "\t");
-				if (matchResultFinal.equals("Win")) {
-					writeBuffer.write("1" + "\t");
-					writeBuffer.write("0" + "\t");
-					writeBuffer.write("0" + "\t");
-				} else if (matchResultFinal.equals("Draw")) {
-					writeBuffer.write("0" + "\t");
-					writeBuffer.write("1" + "\t");
-					writeBuffer.write("0" + "\t");
-				} else if (matchResultFinal.equals("Loss")) {
-					writeBuffer.write("0" + "\t");
-					writeBuffer.write("0" + "\t");
-					writeBuffer.write("1" + "\t");
-				} else {
-					throw new IllegalArgumentException("Result must be a 'Win', 'Draw' or 'Loss'");
-				}
+			if (checkTeamExists(teamNameFinal)) {
 
-				writeBuffer.write(goalsScoredFinal + "\t" + "\t");
-				writeBuffer.write(goalsConcededFinal + "\t" + "\t");
+				// TODO: UPDATE TABLE IF TEAM EXISTS ALREADY
 
 				int goalSc = Integer.valueOf(goalsScoredFinal);
 				int goalCon = Integer.valueOf(goalsConcededFinal);
 				int goalDifference = goalSc - goalCon;
 
-				writeBuffer.write(goalDifference + "\t" + "\t");
+				String gamesPlayed = "SELECT GamesPlayed FROM leaguestandings WHERE TeamName = '" + teamNameFinal
+						+ "';";
+				String gp = null;
+				ResultSet gamesPlayedResult = stmt.executeQuery(gamesPlayed);
+				if (gamesPlayedResult.next()) {
+					gp = gamesPlayedResult.getString("GamesPlayed");
+				}
+
+				int gpNew = Integer.valueOf(gp);
+				int newGamesPlayed = gpNew + 1;
+
+				String goalsScored = "SELECT GoalsScored FROM leaguestandings WHERE TeamName = '" + teamNameFinal
+						+ "';";
+				ResultSet goalsScoredResult = stmt.executeQuery(goalsScored);
+				String gsr = null;
+				if (goalsScoredResult.next()) {
+					gsr = goalsScoredResult.getString("goalsScored");
+				}
+				int currentGoalsScored = Integer.valueOf(gsr);
+				int newGoalsScored = goalSc + currentGoalsScored;
 
 				if (matchResultFinal.equals("Win")) {
-					writeBuffer.write("3");
-				} else if (matchResultFinal.equals("Draw")) {
-					writeBuffer.write("1");
-				} else if (matchResultFinal.equals("Loss")) {
-					writeBuffer.write("0");
-				} else {
-					throw new IllegalArgumentException();
-				}
-				writeBuffer.close();
-			} catch (IOException e) {
 
+					String currentWins = "SELECT Wins FROM leaguestandings WHERE TeamName = '" + teamNameFinal + "';";
+					ResultSet currentWinsResult = stmt.executeQuery(currentWins);
+					String cwr = null;
+					if (currentWinsResult.next()) {
+						cwr = currentWinsResult.getString("Wins");
+					}
+					int wins = Integer.valueOf(cwr);
+					int newWins = wins + 1;
+
+					String goalsConceded = "SELECT GoalsConceded FROM leaguestandings WHERE TeamName = '"
+							+ teamNameFinal + "';";
+					
+					ResultSet goalsConcededResult = stmt.executeQuery(goalsConceded);
+					String gcr = null;
+					if (goalsConcededResult.next()) {
+						gcr = goalsConcededResult.getString("GoalsConceded");
+					}
+					
+					int currentGoalsConceded = Integer.valueOf(gcr);
+
+					int newGoalsConceded = goalCon + currentGoalsConceded;
+
+					int newGoalDifference = newGoalsScored - newGoalsConceded;
+
+					String points = "SELECT Points FROM leaguestandings WHERE TeamName = '" + teamNameFinal + "';";
+					ResultSet pointsResult = stmt.executeQuery(points);
+					String pr = null;
+					if(pointsResult.next()) {
+						pr = pointsResult.getString("Points");
+					}
+					int newPoints = Integer.valueOf(pr) + 3;
+
+					String insertdata = "UPDATE leaguestandings SET GamesPlayed = '" + newGamesPlayed + "', Wins = '"
+							+ newWins + "', GoalsScored = '" + newGoalsScored + "', GoalsConceded = '"
+							+ newGoalsConceded + "', GoalDifference = '" + newGoalDifference + "', Points = '"
+							+ newPoints + "' WHERE TeamName = '"+ teamNameFinal + "';";
+
+					stmt.executeUpdate(insertdata);
+
+				} else if (matchResultFinal.equals("Draw")) {
+					String insertdata = "INSERT INTO leaguestandings VALUES ('" + teamNameFinal
+							+ "','1', '0', '1', '0', '" + goalsScoredFinal + "', '" + goalsConcededFinal + "', '"
+							+ goalDifference + "', '1');";
+
+					stmt.executeUpdate(insertdata);
+
+				} else if (matchResultFinal.equals("Loss")) {
+					String insertdata = "INSERT INTO leaguestandings VALUES ('" + teamNameFinal
+							+ "','1', '0', '0', '1', '" + goalsScoredFinal + "', '" + goalsConcededFinal + "', '"
+							+ goalDifference + "', '0');";
+
+					stmt.executeUpdate(insertdata);
+
+				} else {
+					throw new IllegalArgumentException("Result must be a 'Win', 'Draw' or 'Loss'");
+				}
+
+			} else {
+
+				try {
+
+					String createTable = "CREATE TABLE IF NOT EXISTS leaguestandings(TeamName VARCHAR(50),GamesPlayed int, Wins int, Draws int, Losses int, GoalsScored int, GoalsConceded int, GoalDifference int, Points int);";
+
+					stmt.executeUpdate(createTable);
+
+					newTeamInput(teamNameFinal, matchResultFinal, goalsScoredFinal, goalsConcededFinal);
+
+				}
+				/*
+				 * 
+				 * writeBuffer.write(newLine); if (teamNameFinal.length() < 8) {
+				 * writeBuffer.write(teamNameFinal + "\t" + "\t"); } else {
+				 * writeBuffer.write(teamNameFinal + "\t"); } writeBuffer.write("1" + "\t" +
+				 * "\t"); if (matchResultFinal.equals("Win")) { writeBuffer.write("1" + "\t");
+				 * writeBuffer.write("0" + "\t"); writeBuffer.write("0" + "\t"); } else if
+				 * (matchResultFinal.equals("Draw")) { writeBuffer.write("0" + "\t");
+				 * writeBuffer.write("1" + "\t"); writeBuffer.write("0" + "\t"); } else if
+				 * (matchResultFinal.equals("Loss")) { writeBuffer.write("0" + "\t");
+				 * writeBuffer.write("0" + "\t"); writeBuffer.write("1" + "\t"); } else { throw
+				 * new IllegalArgumentException("Result must be a 'Win', 'Draw' or 'Loss'"); }
+				 * 
+				 * writeBuffer.write(goalsScoredFinal + "\t" + "\t");
+				 * writeBuffer.write(goalsConcededFinal + "\t" + "\t");
+				 * 
+				 * int goalSc = Integer.valueOf(goalsScoredFinal); int goalCon =
+				 * Integer.valueOf(goalsConcededFinal); int goalDifference = goalSc - goalCon;
+				 * 
+				 * writeBuffer.write(goalDifference + "\t" + "\t");
+				 * 
+				 * if (matchResultFinal.equals("Win")) { writeBuffer.write("3"); } else if
+				 * (matchResultFinal.equals("Draw")) { writeBuffer.write("1"); } else if
+				 * (matchResultFinal.equals("Loss")) { writeBuffer.write("0"); } else { throw
+				 * new IllegalArgumentException(); } writeBuffer.close(); } catch (IOException
+				 * e) {
+				 * 
+				 * }
+				 */
+				finally {
+
+				}
 			}
 		}
 	}
 
+	public boolean checkTeamExists(String teamName) throws SQLException {
 
-	public boolean checkTeamExists(String teamName) throws IOException {
-		File f1 = new File("C:/Users/hunya/Documents/GitHub/COM1033_Assignment1/league_table.txt"); // Creation of
-																											// File
-																											// Descriptor
-																											// for input
-																											// file
-		String[] words = null; // Intialize the word Array
-		FileReader fr = new FileReader(f1); // Creation of File Reader object
-		BufferedReader br = new BufferedReader(fr); // Creation of BufferedReader object
-		String s;
-		String input = teamName; // Input word to be searched
-		int count = 0; // Intialize the word to zero
-		while ((s = br.readLine()) != null) // Reading Content from the file
-		{
-			words = s.split("\t"); // Split the word using tabs
-			for (String word : words) {
-				if (word.equals(input)) // Search for the given word
-				{
-					count++; // If Present increase the count by one
-				}
-			}
-		}
-		if (count != 0) // Check for count not equal to zero
-		{
+		Connection conn = DriverManager.getConnection(
+				"jdbc:mysql://localhost:3306/users?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC",
+				"root", "password");
+		Statement stmt = conn.createStatement();
+		String SQL = "select * from leaguestandings where TeamName = '" + teamName + "';";
+
+		ResultSet rset = stmt.executeQuery(SQL);
+
+		if (rset.next()) {
 			return true;
 		} else {
 			return false;
 		}
+	}
+
+	/*
+	 * public boolean checkTeamExists(String teamName) throws IOException { File f1
+	 * = new
+	 * File("C:/Users/hunya/Documents/GitHub/COM1033_Assignment1/league_table.txt");
+	 * // Creation of // File // Descriptor // for input // file String[] words =
+	 * null; // Intialize the word Array FileReader fr = new FileReader(f1); //
+	 * Creation of File Reader object BufferedReader br = new BufferedReader(fr); //
+	 * Creation of BufferedReader object String s; String input = teamName; // Input
+	 * word to be searched int count = 0; // Intialize the word to zero while ((s =
+	 * br.readLine()) != null) // Reading Content from the file { words =
+	 * s.split("\t"); // Split the word using tabs for (String word : words) { if
+	 * (word.equals(input)) // Search for the given word { count++; // If Present
+	 * increase the count by one } } } if (count != 0) // Check for count not equal
+	 * to zero { return true; } else { return false; } }
+	 */
+
+	public void newTeamInput(String teamNameFinal, String matchResultFinal, String goalsScoredFinal,
+			String goalsConcededFinal) throws SQLException {
+
+		int goalSc = Integer.valueOf(goalsScoredFinal);
+		int goalCon = Integer.valueOf(goalsConcededFinal);
+		int goalDifference = goalSc - goalCon;
+
+		Connection conn = DriverManager.getConnection(
+				"jdbc:mysql://localhost/users?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC", "root",
+				"password");
+		Statement stmt = conn.createStatement();
+
+		if (matchResultFinal.equals("Win")) {
+			String insertdata = "INSERT INTO leaguestandings VALUES ('" + teamNameFinal + "','1', '1', '0', '0', '"
+					+ goalsScoredFinal + "', '" + goalsConcededFinal + "', '" + goalDifference + "', '3');";
+			stmt.executeUpdate(insertdata);
+		} else if (matchResultFinal.equals("Draw")) {
+			String insertdata = "INSERT INTO leaguestandings VALUES ('" + teamNameFinal + "','1', '0', '1', '0', '"
+					+ goalsScoredFinal + "', '" + goalsConcededFinal + "', '" + goalDifference + "', '1');";
+			stmt.executeUpdate(insertdata);
+		} else if (matchResultFinal.equals("Loss")) {
+			String insertdata = "INSERT INTO leaguestandings VALUES ('" + teamNameFinal + "','1', '0', '0', '1', '"
+					+ goalsScoredFinal + "', '" + goalsConcededFinal + "', '" + goalDifference + "', '0');";
+			stmt.executeUpdate(insertdata);
+		} else {
+			throw new IllegalArgumentException("Result must be a 'Win', 'Draw' or 'Loss'");
+		}
+
 	}
 }

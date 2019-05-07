@@ -23,7 +23,7 @@ DROP TABLE IF EXISTS `users`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `users` (
-  `username` varchar(50) NOT NULL,
+  `username` varchar(50) NOT NULL PRIMARY KEY,
   `password` varchar(50) DEFAULT NULL,
   `role` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`username`)
@@ -33,13 +33,6 @@ CREATE TABLE `users` (
 --
 -- Dumping data for table `users`
 --
-
-LOCK TABLES `users` WRITE;
-/*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES ('archimate','archi123','League developer'),('babachan','babs10','Player'),('eugene','likescats69','Manager'),('headDev','develop123','League developer'),('hunyakvera','vera2000','Player'),('jimmy','reddit3000','Player'),('moist','fumba69','Player');
-/*!40000 ALTER TABLE `users` ENABLE KEYS */;
-UNLOCK TABLES;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

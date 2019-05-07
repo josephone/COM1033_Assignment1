@@ -3,7 +3,7 @@ package jk00687_project_com1028;
 import java.sql.*;
 
 // INVALID CLASS, NOT NECESSARY BUT WILL DISCUSS THE USE OF THIS CLASS DURING EVALUATION AND 
-// TESTING
+// TESTING. USED FOR TESTING
 
 public class Register {
 

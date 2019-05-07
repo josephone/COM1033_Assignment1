@@ -145,11 +145,10 @@ public class RegisterPage {
 			}
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			try (Connection conn = DriverManager.getConnection(
-					"jdbc:mysql://localhost:3306/users?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC",
+					"jdbc:mysql://localhost/users?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC",
 					"root", "password");
 
 					Statement stmt = conn.createStatement();) {
-
 				if (role.equals("Player") || role.equals("Manager") || role.equals("League developer")) {
 
 					String userInput = "insert into users values ('" + username + "', '" + password + "', '" + role

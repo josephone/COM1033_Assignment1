@@ -1,4 +1,3 @@
 Team name	Games played 	Wins 	Draws	Losses	Goals Scored	Goals Conceded	Goal Difference	Points
 Ali Baba FC	1		1	0	0	2		0		2		3
 Chelsea		1		0	0	1	0		2		-2		0
-Arsenal		1		0	0	1	0		100		-100		0

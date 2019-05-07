@@ -33,9 +33,7 @@ import javax.swing.JTextField;
 
 public class FanPage {
 
-	Scanner scan;
-	private List<TableInfo> tableInformation = new ArrayList<TableInfo>();
-	private List<KnockoutTree> knockoutTree = new ArrayList<KnockoutTree>();
+	private Scanner scan;
 	private JFrame frame;
 	private JTextField teamName;
 
