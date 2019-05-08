@@ -96,27 +96,17 @@ public class LeagueDeveloperPage {
 		lblGoalsConceded.setBounds(10, 129, 85, 14);
 		frame.getContentPane().add(lblGoalsConceded);
 
-		JTextField matchResult = new JTextField();
-		matchResult.setBounds(105, 157, 86, 20);
-		frame.getContentPane().add(matchResult);
-		matchResult.setColumns(10);
-
-		JLabel lblResult = new JLabel("Result:");
-		lblResult.setBounds(10, 160, 46, 14);
-		frame.getContentPane().add(lblResult);
-
 		JButton updateTableBtn = new JButton("Update tables");
-		updateTableBtn.setBounds(10, 215, 114, 23);
+		updateTableBtn.setBounds(10, 183, 114, 23);
 		frame.getContentPane().add(updateTableBtn);
 
 		updateTableBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				String teamNameString = teamName.getText();
-				String matchResultString = matchResult.getText();
 				String goalsScoredString = goalsScored.getText();
 				String goalsConcededString = goalsConceded.getText();
 				try {
-					updateTable(teamNameString, matchResultString, goalsScoredString, goalsConcededString);
+					updateTable(teamNameString, goalsScoredString, goalsConcededString);
 
 					JOptionPane.showMessageDialog(null, "Tables successfully updated");
 				} catch (IllegalArgumentException | IOException e) {
@@ -133,7 +123,7 @@ public class LeagueDeveloperPage {
 		});
 
 		JButton editStatsBtn = new JButton("Edit statistics");
-		editStatsBtn.setBounds(262, 215, 134, 23);
+		editStatsBtn.setBounds(263, 183, 134, 23);
 		frame.getContentPane().add(editStatsBtn);
 		editStatsBtn.addActionListener(new ActionListener() {
 
@@ -147,8 +137,7 @@ public class LeagueDeveloperPage {
 
 	}
 
-	public void updateTable(String teamNameFinal, String matchResultFinal, String goalsScoredFinal,
-			String goalsConcededFinal)
+	public void updateTable(String teamNameFinal, String goalsScoredFinal, String goalsConcededFinal)
 			throws IllegalArgumentException, IOException, ClassNotFoundException, SQLException {
 
 		Class.forName("com.mysql.cj.jdbc.Driver");
@@ -184,7 +173,7 @@ public class LeagueDeveloperPage {
 				int currentGoalsScored = Integer.valueOf(gsr);
 				int newGoalsScored = goalSc + currentGoalsScored;
 
-				if (matchResultFinal.equals("Win")) {
+				if (Integer.valueOf(goalsScoredFinal) > Integer.valueOf(goalsConcededFinal)) {
 
 					String currentWins = "SELECT Wins FROM leaguestandings WHERE TeamName = '" + teamNameFinal + "';";
 					ResultSet currentWinsResult = stmt.executeQuery(currentWins);
@@ -197,13 +186,13 @@ public class LeagueDeveloperPage {
 
 					String goalsConceded = "SELECT GoalsConceded FROM leaguestandings WHERE TeamName = '"
 							+ teamNameFinal + "';";
-					
+
 					ResultSet goalsConcededResult = stmt.executeQuery(goalsConceded);
 					String gcr = null;
 					if (goalsConcededResult.next()) {
 						gcr = goalsConcededResult.getString("GoalsConceded");
 					}
-					
+
 					int currentGoalsConceded = Integer.valueOf(gcr);
 
 					int newGoalsConceded = goalCon + currentGoalsConceded;
@@ -213,7 +202,7 @@ public class LeagueDeveloperPage {
 					String points = "SELECT Points FROM leaguestandings WHERE TeamName = '" + teamNameFinal + "';";
 					ResultSet pointsResult = stmt.executeQuery(points);
 					String pr = null;
-					if(pointsResult.next()) {
+					if (pointsResult.next()) {
 						pr = pointsResult.getString("Points");
 					}
 					int newPoints = Integer.valueOf(pr) + 3;
@@ -221,15 +210,13 @@ public class LeagueDeveloperPage {
 					String insertdata = "UPDATE leaguestandings SET GamesPlayed = '" + newGamesPlayed + "', Wins = '"
 							+ newWins + "', GoalsScored = '" + newGoalsScored + "', GoalsConceded = '"
 							+ newGoalsConceded + "', GoalDifference = '" + newGoalDifference + "', Points = '"
-							+ newPoints + "' WHERE TeamName = '"+ teamNameFinal + "';";
+							+ newPoints + "' WHERE TeamName = '" + teamNameFinal + "';";
 
 					stmt.executeUpdate(insertdata);
 
-				} else if (matchResultFinal.equals("Draw")) {
-					
+				} else if (Integer.valueOf(goalsScoredFinal) == Integer.valueOf(goalsConcededFinal)) {
 
-
-					String currentDraws = "SELECT Wins FROM leaguestandings WHERE TeamName = '" + teamNameFinal + "';";
+					String currentDraws = "SELECT Draws FROM leaguestandings WHERE TeamName = '" + teamNameFinal + "';";
 					ResultSet currentDrawsResult = stmt.executeQuery(currentDraws);
 					String cdr = null;
 					if (currentDrawsResult.next()) {
@@ -240,13 +227,13 @@ public class LeagueDeveloperPage {
 
 					String goalsConceded = "SELECT GoalsConceded FROM leaguestandings WHERE TeamName = '"
 							+ teamNameFinal + "';";
-					
+
 					ResultSet goalsConcededResult = stmt.executeQuery(goalsConceded);
 					String gcr = null;
 					if (goalsConcededResult.next()) {
 						gcr = goalsConcededResult.getString("GoalsConceded");
 					}
-					
+
 					int currentGoalsConceded = Integer.valueOf(gcr);
 
 					int newGoalsConceded = goalCon + currentGoalsConceded;
@@ -256,7 +243,7 @@ public class LeagueDeveloperPage {
 					String points = "SELECT Points FROM leaguestandings WHERE TeamName = '" + teamNameFinal + "';";
 					ResultSet pointsResult = stmt.executeQuery(points);
 					String pr = null;
-					if(pointsResult.next()) {
+					if (pointsResult.next()) {
 						pr = pointsResult.getString("Points");
 					}
 					int newPoints = Integer.valueOf(pr) + 1;
@@ -264,13 +251,14 @@ public class LeagueDeveloperPage {
 					String insertdata = "UPDATE leaguestandings SET GamesPlayed = '" + newGamesPlayed + "', Draws = '"
 							+ newDraws + "', GoalsScored = '" + newGoalsScored + "', GoalsConceded = '"
 							+ newGoalsConceded + "', GoalDifference = '" + newGoalDifference + "', Points = '"
-							+ newPoints + "' WHERE TeamName = '"+ teamNameFinal + "';";
-				
+							+ newPoints + "' WHERE TeamName = '" + teamNameFinal + "';";
+
 					stmt.executeUpdate(insertdata);
 
-				} else if (matchResultFinal.equals("Loss")) {
+				} else if (Integer.valueOf(goalsScoredFinal) < Integer.valueOf(goalsConcededFinal)) {
 
-					String currentLosses = "SELECT Losses FROM leaguestandings WHERE TeamName = '" + teamNameFinal + "';";
+					String currentLosses = "SELECT Losses FROM leaguestandings WHERE TeamName = '" + teamNameFinal
+							+ "';";
 					ResultSet currentLossesResult = stmt.executeQuery(currentLosses);
 					String clr = null;
 					if (currentLossesResult.next()) {
@@ -281,13 +269,13 @@ public class LeagueDeveloperPage {
 
 					String goalsConceded = "SELECT GoalsConceded FROM leaguestandings WHERE TeamName = '"
 							+ teamNameFinal + "';";
-					
+
 					ResultSet goalsConcededResult = stmt.executeQuery(goalsConceded);
 					String gcr = null;
 					if (goalsConcededResult.next()) {
 						gcr = goalsConcededResult.getString("GoalsConceded");
 					}
-					
+
 					int currentGoalsConceded = Integer.valueOf(gcr);
 
 					int newGoalsConceded = goalCon + currentGoalsConceded;
@@ -297,7 +285,7 @@ public class LeagueDeveloperPage {
 					String points = "SELECT Points FROM leaguestandings WHERE TeamName = '" + teamNameFinal + "';";
 					ResultSet pointsResult = stmt.executeQuery(points);
 					String pr = null;
-					if(pointsResult.next()) {
+					if (pointsResult.next()) {
 						pr = pointsResult.getString("Points");
 					}
 					int newPoints = Integer.valueOf(pr) + 0;
@@ -305,7 +293,7 @@ public class LeagueDeveloperPage {
 					String insertdata = "UPDATE leaguestandings SET GamesPlayed = '" + newGamesPlayed + "', Losses = '"
 							+ newLosses + "', GoalsScored = '" + newGoalsScored + "', GoalsConceded = '"
 							+ newGoalsConceded + "', GoalDifference = '" + newGoalDifference + "', Points = '"
-							+ newPoints + "' WHERE TeamName = '"+ teamNameFinal + "';";
+							+ newPoints + "' WHERE TeamName = '" + teamNameFinal + "';";
 
 					stmt.executeUpdate(insertdata);
 
@@ -321,10 +309,10 @@ public class LeagueDeveloperPage {
 
 					stmt.executeUpdate(createTable);
 
-					newTeamInput(teamNameFinal, matchResultFinal, goalsScoredFinal, goalsConcededFinal);
+					newTeamInput(teamNameFinal, goalsScoredFinal, goalsConcededFinal);
 
 				}
-				
+
 				finally {
 
 				}
@@ -349,8 +337,8 @@ public class LeagueDeveloperPage {
 		}
 	}
 
-	public void newTeamInput(String teamNameFinal, String matchResultFinal, String goalsScoredFinal,
-			String goalsConcededFinal) throws SQLException {
+	public void newTeamInput(String teamNameFinal, String goalsScoredFinal, String goalsConcededFinal)
+			throws SQLException {
 
 		int goalSc = Integer.valueOf(goalsScoredFinal);
 		int goalCon = Integer.valueOf(goalsConcededFinal);
@@ -361,15 +349,15 @@ public class LeagueDeveloperPage {
 				"password");
 		Statement stmt = conn.createStatement();
 
-		if (matchResultFinal.equals("Win")) {
+		if (Integer.valueOf(goalsScoredFinal) > Integer.valueOf(goalsConcededFinal)) {
 			String insertdata = "INSERT INTO leaguestandings VALUES ('" + teamNameFinal + "','1', '1', '0', '0', '"
 					+ goalsScoredFinal + "', '" + goalsConcededFinal + "', '" + goalDifference + "', '3');";
 			stmt.executeUpdate(insertdata);
-		} else if (matchResultFinal.equals("Draw")) {
+		} else if (Integer.valueOf(goalsScoredFinal) == Integer.valueOf(goalsConcededFinal)) {
 			String insertdata = "INSERT INTO leaguestandings VALUES ('" + teamNameFinal + "','1', '0', '1', '0', '"
 					+ goalsScoredFinal + "', '" + goalsConcededFinal + "', '" + goalDifference + "', '1');";
 			stmt.executeUpdate(insertdata);
-		} else if (matchResultFinal.equals("Loss")) {
+		} else if (Integer.valueOf(goalsScoredFinal) < Integer.valueOf(goalsConcededFinal)) {
 			String insertdata = "INSERT INTO leaguestandings VALUES ('" + teamNameFinal + "','1', '0', '0', '1', '"
 					+ goalsScoredFinal + "', '" + goalsConcededFinal + "', '" + goalDifference + "', '0');";
 			stmt.executeUpdate(insertdata);
