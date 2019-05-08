@@ -175,7 +175,7 @@ public class FanPage {
 
 		Statement stmt = conn.createStatement();
 
-		String showtable = "SELECT * FROM leaguestandings;";
+		String showtable = "SELECT * FROM leaguestandings ORDER BY points DESC;";
 		String st = null;
 		ResultSet showTableOverall = stmt.executeQuery(showtable);
 		while (showTableOverall.next()) {
