@@ -22,6 +22,7 @@ public class LogOnPage {
 	private JFrame frame;
 	private JTextField usernameEnter;
 	private JTextField passwordEnter;
+	private int count = 0;
 
 	/**
 	 * Launch the application.
@@ -76,12 +77,14 @@ public class LogOnPage {
 		JButton btnLogIn = new JButton("Log in");
 		btnLogIn.setBounds(86, 157, 89, 23);
 		frame.getContentPane().add(btnLogIn);
+		
 		btnLogIn.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				String username = usernameEnter.getText();
 				String password = passwordEnter.getText();
+				
 
 				try {
 					if (checkExists(username, password)) {
@@ -104,10 +107,22 @@ public class LogOnPage {
 						}
 
 					} else {
-						JOptionPane.showMessageDialog(null, "Incorrect login details entered");
+						if (count > 2) {
+							JOptionPane.showMessageDialog(null,
+									"Login details entered incorrectly too many times, please try again later");
+							Thread.sleep(400);
+							Runtime.getRuntime().exit(1);
+						} else {
+							count++;
+							JOptionPane.showMessageDialog(null, "Incorrect login details entered");
+						}
+
 					}
 				} catch (SQLException e) {
 					JOptionPane.showMessageDialog(null, "Incorrect login details entered");
+					e.printStackTrace();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 
@@ -115,20 +130,19 @@ public class LogOnPage {
 
 		});
 	}
-	
 
 	public boolean checkExists(String username, String password) throws SQLException {
-	
+
 		Connection conn = DriverManager.getConnection(
 				"jdbc:mysql://localhost:3306/users?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC",
 				"root", "password");
 		Statement stmt = conn.createStatement();
-		
+
 		String SQL = "select * from users where username = ? and password = ? ";
 		PreparedStatement preparedStatement = conn.prepareStatement(SQL);
 		preparedStatement.setString(1, username);
 		preparedStatement.setString(2, password);
-		
+
 		ResultSet rset = preparedStatement.executeQuery();
 
 		if (rset.next()) {
@@ -148,7 +162,6 @@ public class LogOnPage {
 
 		ResultSet result = stmt.executeQuery(SQL);
 
-		
 		result.beforeFirst();
 		result.next();
 

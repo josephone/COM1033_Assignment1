@@ -312,7 +312,6 @@ public class LeagueDeveloperPage {
 					newTeamInput(teamNameFinal, goalsScoredFinal, goalsConcededFinal);
 
 				}
-
 				finally {
 
 				}
