@@ -134,24 +134,6 @@ public class EditStats {
 			String query = "UPDATE leaguestandings SET GoalsScored = '" + goalsScored + "', GoalsConceded = '" + goalsConceded + "', GoalDifference = '" + goalDifference + "' WHERE TeamName = '"+ teamName + "';";
 			
 			stmt.executeUpdate(query);
-		
-		/*
-		 * String file_name =
-		 * "C:/Users/hunya/Documents/GitHub/COM1033_Assignment1/team_statistics.txt";
-		 * FileWriter write = new FileWriter(file_name, true); BufferedWriter
-		 * writeBuffer = new BufferedWriter(write);
-		 * 
-		 * int goalDifference = Integer.valueOf(goalsScored) -
-		 * Integer.valueOf(goalsConceded); String goalDifferenceString =
-		 * Integer.toString(goalDifference);
-		 * 
-		 * String newLine = System.getProperty("line.separator");
-		 * writeBuffer.write(newLine); writeBuffer.write(teamName + "\t" + "\t");
-		 * writeBuffer.write(goalsScored + "\t" + "\t" + "\t");
-		 * writeBuffer.write(goalsConceded + "\t" + "\t" + "\t");
-		 * writeBuffer.write(goalDifferenceString); writeBuffer.close();
-		 */
-
 	}
 
 }

@@ -2,6 +2,7 @@ package jk00687_project_com1028;
 
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -15,6 +16,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -82,7 +88,7 @@ public class PlayerPage {
 		teamName = new JTextField();
 		teamName.setBounds(287, 102, 86, 20);
 		frame.getContentPane().add(teamName);
-		teamName.setColumns(10);		
+		teamName.setColumns(10);
 
 		JLabel lblTeamStatistics = new JLabel("Team statistics");
 		lblTeamStatistics.setBounds(10, 155, 96, 14);
@@ -107,6 +113,12 @@ public class PlayerPage {
 				} catch (IOException e) {
 
 					e.printStackTrace();
+				} catch (HeadlessException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 
 			}
@@ -115,7 +127,7 @@ public class PlayerPage {
 
 	}
 
-	public void viewTeamStatistics(String teamNameString) throws IOException {
+	public void viewTeamStatistics(String teamNameString) throws IOException, HeadlessException, SQLException {
 
 		JTextArea teamStatistics = new JTextArea();
 		teamStatistics.setFont(new Font("Monospaced", Font.PLAIN, 10));
@@ -123,45 +135,43 @@ public class PlayerPage {
 		frame.getContentPane().add(teamStatistics);
 
 		if (tableSearch(teamNameString, teamStatistics)) {
-			String file_name = "C:/Users/hunya/Documents/GitHub/COM1033_Assignment1/team_statistics.txt";
-			Scanner input = new Scanner(new File(file_name));
-			int count = 0;
 
-			while (input.hasNext() && count <= 15) {
-				int tracker = 0;
-				count++;
-				String word = input.next();
+			teamStatistics.setText("");
 
-				if (count == 13 && tracker == 0) {
-					tracker++;
-					try {
+			Connection conn = DriverManager.getConnection(
+					"jdbc:mysql://localhost:3306/users?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC",
+					"root", "password");
+			Statement stmt = conn.createStatement();
+			String SQL = "select GoalsScored from leaguestandings where TeamName = '" + teamNameString + "';";
 
-						teamStatistics.setText("Total goals scored: " + word + "\n");
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				}
-				if (count == 14 && tracker == 1) {
-					tracker++;
-					String firstString = teamStatistics.getText();
-					try {
-
-						teamStatistics.setText(
-								firstString + "Total goals conceded: " + word + "\n" + "Overall goal difference: ");
-
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				} else {
-					try {
-						String secondString = teamStatistics.getText();
-
-						teamStatistics.setText(secondString + "Overall goal difference: " + word);
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				}
+			ResultSet goalsScoredResult = stmt.executeQuery(SQL);
+			String gsr = null;
+			if (goalsScoredResult.next()) {
+				gsr = goalsScoredResult.getString("GoalsScored");
 			}
+
+			int currentGoalsScored = Integer.valueOf(gsr);
+
+			String goalsScoredString = String.valueOf(currentGoalsScored);
+
+			String goalsConceded = "select GoalsConceded from leaguestandings where TeamName = '" + teamNameString
+					+ "';";
+
+			ResultSet goalsConcededResult = stmt.executeQuery(goalsConceded);
+			String gcr = null;
+			if (goalsConcededResult.next()) {
+				gcr = goalsConcededResult.getString("GoalsConceded");
+			}
+
+			int currentGoalsConceded = Integer.valueOf(gcr);
+
+			String goalsConcededString = String.valueOf(currentGoalsConceded);
+			
+			int overallGoalDifference = currentGoalsScored - currentGoalsConceded;
+
+			teamStatistics.setText("Total goals scored: " + goalsScoredString + "\n" + "Total goals conceded: "
+					+ goalsConcededString + "\n" + "Overall goal difference: " + overallGoalDifference);
+
 		} else {
 			teamStatistics.setText(null);
 			JOptionPane.showMessageDialog(null, "Team does not exist");
@@ -169,48 +179,27 @@ public class PlayerPage {
 
 	}
 
-	public boolean tableSearch(String teamName, JTextArea tableStandings) throws IOException {
+	public boolean tableSearch(String teamName, JTextArea tableStandings) throws IOException, SQLException {
 		tableStandings.setText(null);
-		FileReader file = new FileReader("C:/Users/hunya/Documents/GitHub/COM1033_Assignment1/league_table.txt");
-		
-		
-		BufferedReader buffer = new BufferedReader(file);
 
-		String line = buffer.readLine();
-
-		List<Map<String, Integer>> list = new ArrayList<>();
-
-		while (line != null) {
-			Map<String, Integer> hash = new HashMap<String, Integer>();
-			String[] words = line.split("  ");
-
-			for (String s : words) {
-				Integer i = hash.get(s);
-				hash.put(s, (i == null) ? 1 : i + 1);
-			}
-
-			line = buffer.readLine();
-			list.add(hash);
+		if (findTeam(teamName)) {
+			return true;
+		} else {
+			return false;
 		}
 
-		for (Map<String, Integer> mapAtRow : list) {
-			
-			if (findTeam(teamName, tableStandings, mapAtRow)) {
-				return true;
-			}
-		}
-		return false;
 	}
 
-	public boolean findTeam(String teamName, JTextArea tableStandings, Map<String, Integer> MapAtRow) {
+	public boolean findTeam(String teamName) throws SQLException {
+		Connection conn = DriverManager.getConnection(
+				"jdbc:mysql://localhost:3306/users?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC",
+				"root", "password");
+		Statement stmt = conn.createStatement();
+		String SQL = "select * from leaguestandings where TeamName = '" + teamName + "';";
 
-		String content = MapAtRow.toString();
-		String pattern = teamName;
+		ResultSet rset = stmt.executeQuery(SQL);
 
-		Pattern patternString = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE);
-		Matcher matcher = patternString.matcher(content);
-		
-		if (matcher.find()) {
+		if (rset.next()) {
 			return true;
 		} else {
 			return false;
