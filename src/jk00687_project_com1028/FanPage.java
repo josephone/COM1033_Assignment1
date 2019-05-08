@@ -29,6 +29,7 @@ import javax.swing.JFrame;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextPane;
 import javax.swing.table.DefaultTableModel;
@@ -191,70 +192,52 @@ public class FanPage {
 	}
 
 	public void tableSearch(String teamName, JTable tableStandings) throws IOException, ClassNotFoundException, SQLException {
-		
-		Class.forName("com.mysql.cj.jdbc.Driver");
+	
+		if (findTeam(teamName) == true) {
+			Class.forName("com.mysql.cj.jdbc.Driver");
 
-		Connection conn = DriverManager.getConnection(
-				"jdbc:mysql://localhost/users?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC", "root",
-				"password");
+			Connection conn = DriverManager.getConnection(
+					"jdbc:mysql://localhost/users?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC", "root",
+					"password");
 
-		Statement stmt = conn.createStatement();
-		
-		String query = "SELECT * FROM leagueStandings WHERE TeamName = '" + teamName + "';";
-		String q = null;
-		
-		ResultSet queryResult = stmt.executeQuery(query);
-		
-		for( int i = tableModel.getRowCount() - 1; i >= 0; i-- ) {
-	        tableModel.removeRow(i);
-	    }
-		
-		while (queryResult.next()) {
-			String[] topRow = { queryResult.getString("TeamName"), queryResult.getString("GamesPlayed"),
-					queryResult.getString("Wins"), queryResult.getString("Draws"),
-					queryResult.getString("Losses"), queryResult.getString("GoalsScored"),
-					queryResult.getString("GoalsConceded"), queryResult.getString("GoalDifference"),
-					queryResult.getString("Points") };
+			Statement stmt = conn.createStatement();
+			
+			String query = "SELECT * FROM leagueStandings WHERE TeamName = '" + teamName + "';";
+			String q = null;
+			
+			ResultSet queryResult = stmt.executeQuery(query);
+			
+			for( int i = tableModel.getRowCount() - 1; i >= 0; i-- ) {
+		        tableModel.removeRow(i);
+		    }
+			
+			while (queryResult.next()) {
+				String[] topRow = { queryResult.getString("TeamName"), queryResult.getString("GamesPlayed"),
+						queryResult.getString("Wins"), queryResult.getString("Draws"),
+						queryResult.getString("Losses"), queryResult.getString("GoalsScored"),
+						queryResult.getString("GoalsConceded"), queryResult.getString("GoalDifference"),
+						queryResult.getString("Points") };
 
-			tableModel.addRow(topRow);
+				tableModel.addRow(topRow);
+			}
+				
+			}else {
+				JOptionPane.showMessageDialog(null, "Team not found");
 		}
 		
-		/*
-		 * FileReader file = new FileReader(
-		 * "C:/Users/hunya/Documents/GitHub/COM1033_Assignment1/league_table.txt");
-		 * String topRow = Files .readAllLines(Paths.get(
-		 * "C:/Users/hunya/Documents/GitHub/COM1033_Assignment1/league_table.txt")).get(
-		 * 0);
-		 * 
-		 * BufferedReader buffer = new BufferedReader(file);
-		 * 
-		 * String line = buffer.readLine();
-		 * 
-		 * List<Map<String, Integer>> list = new ArrayList<>();
-		 * 
-		 * while (line != null) { Map<String, Integer> hash = new HashMap<String,
-		 * Integer>(); String[] words = line.split("  ");
-		 * 
-		 * for (String s : words) { Integer i = hash.get(s); hash.put(s, (i == null) ? 1
-		 * : i + 1); }
-		 * 
-		 * line = buffer.readLine(); list.add(hash); }
-		 * 
-		 * for (Map<String, Integer> mapAtRow : list) { System.out.println(mapAtRow); if
-		 * (findTeam(teamName, table, mapAtRow)) { table.setText(topRow + "\n" +
-		 * mapAtRow.toString()); } }
-		 */
+		
 	}
 
-	public boolean findTeam(String teamName, JTable table2, Map<String, Integer> MapAtRow) {
+	public boolean findTeam(String teamName) throws SQLException {
+		Connection conn = DriverManager.getConnection(
+				"jdbc:mysql://localhost:3306/users?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC",
+				"root", "password");
+		Statement stmt = conn.createStatement();
+		String SQL = "select * from leaguestandings where TeamName = '" + teamName + "';";
 
-		String content = MapAtRow.toString();
-		String pattern = teamName;
+		ResultSet rset = stmt.executeQuery(SQL);
 
-		Pattern patternString = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE);
-		Matcher matcher = patternString.matcher(content);
-
-		if (matcher.find()) {
+		if (rset.next()) {
 			return true;
 		} else {
 			return false;
