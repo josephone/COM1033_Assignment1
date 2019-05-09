@@ -150,11 +150,8 @@ public class LeagueDeveloperPage {
 
 	public void updateTable(String teamNameFinal, String goalsScoredFinal, String goalsConcededFinal)
 			throws IllegalArgumentException, IOException, ClassNotFoundException, SQLException {
-
-		Class.forName("com.mysql.cj.jdbc.Driver");
 		try (Connection conn = DriverManager.getConnection(
-				"jdbc:mysql://localhost/users?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC", "root",
-				"password")) {
+				"jdbc:sqlite:users")) {
 			Statement stmt = conn.createStatement();
 
 			if (checkTeamExists(teamNameFinal)&& goalsScored != null && goalsConceded != null) {
@@ -225,6 +222,7 @@ public class LeagueDeveloperPage {
 
 					stmt.executeUpdate(insertdata);
 
+					conn.close();
 				} else if (Integer.valueOf(goalsScoredFinal) == Integer.valueOf(goalsConcededFinal)) {
 
 					String currentDraws = "SELECT Draws FROM leaguestandings WHERE TeamName = '" + teamNameFinal + "';";
@@ -265,6 +263,7 @@ public class LeagueDeveloperPage {
 							+ newPoints + "' WHERE TeamName = '" + teamNameFinal + "';";
 
 					stmt.executeUpdate(insertdata);
+					conn.close();
 
 				} else if (Integer.valueOf(goalsScoredFinal) < Integer.valueOf(goalsConcededFinal)) {
 
@@ -307,6 +306,7 @@ public class LeagueDeveloperPage {
 							+ newPoints + "' WHERE TeamName = '" + teamNameFinal + "';";
 
 					stmt.executeUpdate(insertdata);
+					conn.close();
 
 				} else {
 					throw new IllegalArgumentException("Incorrect details entered");
@@ -325,18 +325,19 @@ public class LeagueDeveloperPage {
 	public boolean checkTeamExists(String teamName) throws SQLException {
 
 		Connection conn = DriverManager.getConnection(
-				"jdbc:mysql://localhost:3306/users?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC",
-				"root", "password");
+				"jdbc:sqlite:users");
 		Statement stmt = conn.createStatement();
 		String SQL = "select * from leaguestandings where TeamName = '" + teamName + "';";
 
 		ResultSet rset = stmt.executeQuery(SQL);
 
 		if (rset.next()) {
+			conn.close();
 			return true;
 		} else {
 			return false;
 		}
+		
 	}
 
 	public void newTeamInput(String teamNameFinal, String goalsScoredFinal, String goalsConcededFinal)
@@ -347,25 +348,28 @@ public class LeagueDeveloperPage {
 		int goalDifference = goalSc - goalCon;
 
 		Connection conn = DriverManager.getConnection(
-				"jdbc:mysql://localhost/users?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC", "root",
-				"password");
+				"jdbc:sqlite:users");
 		Statement stmt = conn.createStatement();
 
 		if (Integer.valueOf(goalsScoredFinal) > Integer.valueOf(goalsConcededFinal)) {
 			String insertdata = "INSERT INTO leaguestandings VALUES ('" + teamNameFinal + "','1', '1', '0', '0', '"
 					+ goalsScoredFinal + "', '" + goalsConcededFinal + "', '" + goalDifference + "', '3');";
 			stmt.executeUpdate(insertdata);
+			conn.close();
 		} else if (Integer.valueOf(goalsScoredFinal) == Integer.valueOf(goalsConcededFinal)) {
 			String insertdata = "INSERT INTO leaguestandings VALUES ('" + teamNameFinal + "','1', '0', '1', '0', '"
 					+ goalsScoredFinal + "', '" + goalsConcededFinal + "', '" + goalDifference + "', '1');";
 			stmt.executeUpdate(insertdata);
+			conn.close();
 		} else if (Integer.valueOf(goalsScoredFinal) < Integer.valueOf(goalsConcededFinal)) {
 			String insertdata = "INSERT INTO leaguestandings VALUES ('" + teamNameFinal + "','1', '0', '0', '1', '"
 					+ goalsScoredFinal + "', '" + goalsConcededFinal + "', '" + goalDifference + "', '0');";
 			stmt.executeUpdate(insertdata);
+			conn.close();
 		} else {
 			throw new IllegalArgumentException("Result must be a 'Win', 'Draw' or 'Loss'");
 		}
+		conn.close();
 
 	}
 }

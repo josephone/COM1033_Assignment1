@@ -120,9 +120,7 @@ public class PlayerPage {
 
 			teamStatistics.setText("");
 
-			Connection conn = DriverManager.getConnection(
-					"jdbc:mysql://localhost:3306/users?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC",
-					"root", "password");
+			Connection conn = DriverManager.getConnection("jdbc:sqlite:users");
 			Statement stmt = conn.createStatement();
 			String SQL = "select GoalsScored from leaguestandings where TeamName = '" + teamNameString + "';";
 
@@ -148,7 +146,7 @@ public class PlayerPage {
 			int currentGoalsConceded = Integer.valueOf(gcr);
 
 			String goalsConcededString = String.valueOf(currentGoalsConceded);
-			
+
 			int overallGoalDifference = currentGoalsScored - currentGoalsConceded;
 
 			teamStatistics.setText("Total goals scored: " + goalsScoredString + "\n" + "Total goals conceded: "
@@ -173,9 +171,7 @@ public class PlayerPage {
 	}
 
 	public boolean findTeam(String teamName) throws SQLException {
-		Connection conn = DriverManager.getConnection(
-				"jdbc:mysql://localhost:3306/users?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC",
-				"root", "password");
+		Connection conn = DriverManager.getConnection("jdbc:sqlite:users");
 		Statement stmt = conn.createStatement();
 		String SQL = "select * from leaguestandings where TeamName = '" + teamName + "';";
 

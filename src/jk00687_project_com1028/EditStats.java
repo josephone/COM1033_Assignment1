@@ -126,10 +126,8 @@ public class EditStats {
 		if (!checkTeamExists(teamName)) {
 			JOptionPane.showMessageDialog(null, "Team not found");
 		}else {
-			Class.forName("com.mysql.cj.jdbc.Driver");
 			Connection conn = DriverManager.getConnection(
-					"jdbc:mysql://localhost/users?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC", "root",
-					"password");
+					"jdbc:sqlite:users");
 				Statement stmt = conn.createStatement();
 				
 				int goalDifference = Integer.valueOf(goalsScored) - Integer.valueOf(goalsConceded);
@@ -137,6 +135,8 @@ public class EditStats {
 				String query = "UPDATE leaguestandings SET GoalsScored = '" + goalsScored + "', GoalsConceded = '" + goalsConceded + "', GoalDifference = '" + goalDifference + "' WHERE TeamName = '"+ teamName + "';";
 				
 				stmt.executeUpdate(query);
+				
+				conn.close();
 
 				JOptionPane.showMessageDialog(null, "Statistics updated");
 		}
@@ -145,14 +145,14 @@ public class EditStats {
 	public boolean checkTeamExists(String teamName) throws SQLException {
 
 		Connection conn = DriverManager.getConnection(
-				"jdbc:mysql://localhost:3306/users?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC",
-				"root", "password");
+				"jdbc:sqlite:users");
 		Statement stmt = conn.createStatement();
 		String SQL = "select * from leaguestandings where TeamName = '" + teamName + "';";
 
 		ResultSet rset = stmt.executeQuery(SQL);
 		
 		if (rset.next()) {
+			conn.close();
 			return true;
 		} else {
 			return false;

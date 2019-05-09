@@ -144,11 +144,9 @@ public class FanPage {
 	}
 
 	public void showTable(JTable leagueTableStandings) throws SQLException, ClassNotFoundException {
-		Class.forName("com.mysql.cj.jdbc.Driver");
-
+	
 		Connection conn = DriverManager.getConnection(
-				"jdbc:mysql://localhost/users?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC", "root",
-				"password");
+				"jdbc:sqlite:users");
 
 		Statement stmt = conn.createStatement();
 
@@ -164,17 +162,14 @@ public class FanPage {
 
 			tableModel.addRow(topRow);
 		}
-		
+		conn.close();
 	}
 
 	public void tableSearch(String teamName, JTable tableStandings) throws IOException, ClassNotFoundException, SQLException {
 	
 		if (findTeam(teamName) == true) {
-			Class.forName("com.mysql.cj.jdbc.Driver");
-
 			Connection conn = DriverManager.getConnection(
-					"jdbc:mysql://localhost/users?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC", "root",
-					"password");
+					"jdbc:sqlite:users");
 
 			Statement stmt = conn.createStatement();
 			
@@ -196,7 +191,7 @@ public class FanPage {
 
 				tableModel.addRow(topRow);
 			}
-				
+			conn.close();
 			}else {
 				JOptionPane.showMessageDialog(null, "Team not found");
 		}
@@ -206,8 +201,7 @@ public class FanPage {
 
 	public boolean findTeam(String teamName) throws SQLException {
 		Connection conn = DriverManager.getConnection(
-				"jdbc:mysql://localhost:3306/users?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC",
-				"root", "password");
+				"jdbc:sqlite:users");
 		Statement stmt = conn.createStatement();
 		String SQL = "select * from leaguestandings where TeamName = '" + teamName + "';";
 

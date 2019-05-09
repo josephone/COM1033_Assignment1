@@ -115,15 +115,14 @@ public class RegisterPage {
 	}
 
 	public boolean checkExists(String username) throws SQLException {
-		Connection conn = DriverManager.getConnection(
-				"jdbc:mysql://localhost:3306/users?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC",
-				"root", "password");
+		Connection conn = DriverManager.getConnection("jdbc:sqlite:users");
 		Statement stmt = conn.createStatement();
 		String SQL = "select * from users where username = '" + username + "';";
 
 		ResultSet rset = stmt.executeQuery(SQL);
 
 		if (rset.next()) {
+			conn.close();
 			return true;
 		} else {
 			return false;
@@ -146,10 +145,7 @@ public class RegisterPage {
 				JOptionPane.showMessageDialog(null, "Password does not meet criteria");
 				throw new SQLException();
 			}
-			Class.forName("com.mysql.cj.jdbc.Driver");
-			try (Connection conn = DriverManager.getConnection(
-					"jdbc:mysql://localhost/users?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC",
-					"root", "password");
+			try (Connection conn = DriverManager.getConnection("jdbc:sqlite:users");
 
 					Statement stmt = conn.createStatement();) {
 				if (role.equals("Player") || role.equals("Manager") || role.equals("League developer")) {
@@ -162,8 +158,9 @@ public class RegisterPage {
 					JOptionPane.showMessageDialog(null, "Invalid role choice");
 					throw new SQLException();
 				}
-
+				conn.close();
 			}
+			
 		}
 
 	}

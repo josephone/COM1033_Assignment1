@@ -133,8 +133,7 @@ public class LogOnPage {
 	public boolean checkExists(String username, String password) throws SQLException {
 
 		Connection conn = DriverManager.getConnection(
-				"jdbc:mysql://localhost:3306/users?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC",
-				"root", "password");
+				"jdbc:sqlite:users");
 		Statement stmt = conn.createStatement();
 
 		String SQL = "select * from users where username = ? and password = ? ";
@@ -143,8 +142,9 @@ public class LogOnPage {
 		preparedStatement.setString(2, password);
 
 		ResultSet rset = preparedStatement.executeQuery();
-
+		conn.close();
 		if (rset.next()) {
+			
 			return true;
 		} else {
 			return false;
@@ -154,17 +154,17 @@ public class LogOnPage {
 	public String checkRole(String username) throws SQLException {
 
 		Connection conn = DriverManager.getConnection(
-				"jdbc:mysql://localhost:3306/users?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC",
-				"root", "password");
+				"jdbc:sqlite:users");
 		String SQL = "select role from users where username = '" + username + "';";
 		Statement stmt = conn.createStatement();
 
 		ResultSet result = stmt.executeQuery(SQL);
-
-		result.beforeFirst();
+		
 		result.next();
-
-		return result.getString(1).toString();
-
+		
+		String resultRole = result.getString(1).toString();
+		conn.close();
+		
+		return resultRole;
 	}
 }
