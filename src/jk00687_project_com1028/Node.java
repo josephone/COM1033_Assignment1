@@ -13,18 +13,17 @@ public class Node {
 		this.teamRight = teamRight;
 	}
 	
-
 	public void setScore(int score) {
 		this.score = score;
 	}
 	
 	public void setTeamRight(Node right) {
-		
+		this.teamRight = right;
 	}
 
 
 	public void setTeamLeft(Node left) {
-		
+		this.teamLeft = left;
 	}
 	
 	public int getScore() {

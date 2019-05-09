@@ -20,15 +20,16 @@ import javax.swing.JPasswordField;
 public class LogOnPage {
 
 	private JFrame frame;
-	private JTextField usernameEnter;
+	private JTextField usernameEnter = null;
 	private int count = 0;
-	private JPasswordField passwordField;
+	private JPasswordField passwordField = null;
 
 	/**
 	 * Launch the application.
 	 */
 	public static void main() {
 		EventQueue.invokeLater(new Runnable() {
+			@Override
 			public void run() {
 				try {
 					LogOnPage window = new LogOnPage();
@@ -84,7 +85,6 @@ public class LogOnPage {
 				String username = usernameEnter.getText();
 				String password = new String (passwordField.getPassword());
 				
-
 				try {
 					if (checkExists(username, password)) {
 						switch (checkRole(username)) {
@@ -121,7 +121,7 @@ public class LogOnPage {
 					JOptionPane.showMessageDialog(null, "Incorrect login details entered");
 					e.printStackTrace();
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
+					JOptionPane.showMessageDialog(null, "Error");
 					e.printStackTrace();
 				}
 

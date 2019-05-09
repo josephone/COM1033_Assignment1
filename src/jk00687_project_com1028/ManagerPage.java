@@ -17,17 +17,18 @@ import javax.swing.JTextField;
 public class ManagerPage {
 
 	private JFrame frame;
-	private JTextField teamName;
-	private JTextField goalkeeperName;
-	private JTextField defenderName;
-	private JTextField midfielderName;
-	private JTextField attackerName;
+	private JTextField teamName = null;
+	private JTextField goalkeeperName = null;
+	private JTextField defenderName = null;
+	private JTextField midfielderName = null;
+	private JTextField attackerName = null;
 
 	/**
 	 * Launch the application.
 	 */
 	public static void main() {
 		EventQueue.invokeLater(new Runnable() {
+			@Override
 			public void run() {
 				try {
 					ManagerPage window = new ManagerPage();
@@ -102,6 +103,7 @@ public class ManagerPage {
 
 		JButton btnManager = new JButton("Update team sheets");
 		btnManager.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 
 				String teamNameString = teamName.getText();
@@ -115,7 +117,7 @@ public class ManagerPage {
 							attackerNameString);
 					JOptionPane.showMessageDialog(null, "Team sheet updated");
 				} catch (FileNotFoundException | UnsupportedEncodingException e1) {
-					// TODO Auto-generated catch block
+					JOptionPane.showMessageDialog(null, "Error");
 					e1.printStackTrace();
 				}
 			}

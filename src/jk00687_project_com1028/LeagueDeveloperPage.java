@@ -5,39 +5,31 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Scanner;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
-import javax.swing.JCheckBox;
 
 public class LeagueDeveloperPage {
 
 	private JFrame frame;
-	private JTextField teamName;
-	private JTextField goalsScored;
-	private JTextField goalsConceded;
-	private JTextField matchResult;
+	private JTextField teamName = null;
+	private JTextField goalsScored = null;
+	private JTextField goalsConceded = null;
+	private JTextField matchResult = null;
 
 	/**
 	 * Launch the application.
 	 */
 	public static void main() {
 		EventQueue.invokeLater(new Runnable() {
+			@Override
 			public void run() {
 				try {
 					LeagueDeveloperPage window = new LeagueDeveloperPage();
@@ -101,6 +93,7 @@ public class LeagueDeveloperPage {
 		frame.getContentPane().add(updateTableBtn);
 
 		updateTableBtn.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				String teamNameString = teamName.getText();
 				String goalsScoredString = goalsScored.getText();
@@ -113,10 +106,10 @@ public class LeagueDeveloperPage {
 					e.printStackTrace();
 					JOptionPane.showMessageDialog(null, "Tables could not be updated");
 				} catch (ClassNotFoundException e) {
-					// TODO Auto-generated catch block
+					JOptionPane.showMessageDialog(null, "Tables could not be updated");
 					e.printStackTrace();
 				} catch (SQLException e) {
-					// TODO Auto-generated catch block
+					JOptionPane.showMessageDialog(null, "Tables could not be updated");
 					e.printStackTrace();
 				}
 			}

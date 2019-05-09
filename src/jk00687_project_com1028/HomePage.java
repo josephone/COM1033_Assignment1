@@ -16,6 +16,7 @@ public class HomePage {
 	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
+			@Override
 			public void run() {
 				try {
 					HomePage window = new HomePage();
@@ -54,8 +55,6 @@ public class HomePage {
 				frame.dispose();
 				
 			}
-			
-			
 		});
 		
 		JButton btnLogIntoAccount = new JButton("Log into account");
@@ -64,8 +63,8 @@ public class HomePage {
 		
 		JButton fanButton = new JButton("Proceed as fan");
 		fanButton.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				
 				FanPage.main();
 				frame.dispose();
 			}

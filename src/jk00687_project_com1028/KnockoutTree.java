@@ -49,6 +49,5 @@ public class KnockoutTree {
 			System.out.print(startPoint.getScore() + "  ");
 			teamProceed(startPoint.getTeamRight());
 		}
-		
 	}
 }

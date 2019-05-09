@@ -1,40 +1,20 @@
 package jk00687_project_com1028;
 
 import java.awt.EventQueue;
-import java.awt.TextArea;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.LineNumberReader;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.swing.JFrame;
 import javax.swing.JButton;
-import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextPane;
 import javax.swing.table.DefaultTableModel;
 
-import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
@@ -42,14 +22,12 @@ import javax.swing.JTable;
 
 public class FanPage {
 
-	private Scanner scan;
 	private JFrame frame;
-	private JTextField teamName;
-	private String[] headers = { "Team Name", "Games Played", "Wins", "Draws", "Losses", "Goals Scored",
+	private JTextField teamName = null;
+	private final String[] headers = { "Team Name", "Games Played", "Wins", "Draws", "Losses", "Goals Scored",
 			"Goals Conceded", "Goal Difference", "Points" };
 	DefaultTableModel tableModel = new DefaultTableModel(headers, 0);
 	private JTable leagueTable;
-	private JTable table_1;
 	private JTable tableKnockouts;
 
 	/**
@@ -57,11 +35,13 @@ public class FanPage {
 	 */
 	public static void main() {
 		EventQueue.invokeLater(new Runnable() {
+			@Override
 			public void run() {
 				try {
 					FanPage window = new FanPage();
 					window.frame.setVisible(true);
 				} catch (Exception e) {
+					JOptionPane.showMessageDialog(null, "Error");
 					e.printStackTrace();
 				}
 			}
@@ -136,19 +116,20 @@ public class FanPage {
 		frame.getContentPane().add(lblTeamName);
 
 		btnSearch.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent arg0) {
 
 				String teamNameChoice = teamName.getText();
 				try {
 					tableSearch(teamNameChoice, leagueTable);
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
+					JOptionPane.showMessageDialog(null, "Error");
 					e.printStackTrace();
 				} catch (ClassNotFoundException e) {
-					// TODO Auto-generated catch block
+					JOptionPane.showMessageDialog(null, "Error");
 					e.printStackTrace();
 				} catch (SQLException e) {
-					// TODO Auto-generated catch block
+					JOptionPane.showMessageDialog(null, "Error");
 					e.printStackTrace();
 				}
 

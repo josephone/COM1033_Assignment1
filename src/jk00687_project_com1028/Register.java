@@ -69,13 +69,13 @@ public class Register {
 				String userInput = "insert into users values ('" + username + "', '" + password + "');";
 				stmt.executeUpdate(userInput);
 
-				if (role.PLAYER.equals(getRole())) {
+				if (Role.PLAYER.equals(getRole())) {
 					String playerInput = "insert into players(username, password, role) values ('" + username + "', '"
 							+ password + "', '" + role + "');";
 					System.out.println("The SQL statement is: " + playerInput + "\n");
 					stmt.executeUpdate(playerInput);
 
-				} else if (role.MANAGER.equals(getRole())) {
+				} else if (Role.MANAGER.equals(getRole())) {
 					String managerInput = "insert into managers(username, password, role) values ('" + username + "', '"
 							+ password + "', '" + role + "');";
 					System.out.println("The SQL statement is: " + managerInput + "\n");

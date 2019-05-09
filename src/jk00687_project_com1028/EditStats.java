@@ -3,11 +3,10 @@ package jk00687_project_com1028;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -20,10 +19,10 @@ import javax.swing.JButton;
 public class EditStats {
 
 	private JFrame frame;
-	private JTextField teamName;
-	private JTextField goalsScored;
+	private JTextField teamName = null;
+	private JTextField goalsScored = null;
 	private JLabel lblAdjustedGoalsConceded;
-	private JTextField goalsConceded;
+	private JTextField goalsConceded = null;
 	private JButton btnUpdateStatistics;
 
 	/**
@@ -31,6 +30,7 @@ public class EditStats {
 	 */
 	public static void main() {
 		EventQueue.invokeLater(new Runnable() {
+			@Override
 			public void run() {
 				try {
 					EditStats window = new EditStats();
@@ -104,16 +104,16 @@ public class EditStats {
 				try {
 					updateStatistics(teamNameString, goalsScoredString, goalsConcededString);
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
+					JOptionPane.showMessageDialog(null, "Error");
 					e.printStackTrace();
 				} catch (ClassNotFoundException e) {
-					// TODO Auto-generated catch block
+					JOptionPane.showMessageDialog(null, "Error");
 					e.printStackTrace();
 				} catch (SQLException e) {
-					// TODO Auto-generated catch block
+					JOptionPane.showMessageDialog(null, "Error");
 					e.printStackTrace();
 				}
-				JOptionPane.showMessageDialog(null, "Statistics updated");
+				
 				LeagueDeveloperPage.main();
 				frame.dispose();
 			}
@@ -123,17 +123,40 @@ public class EditStats {
 
 	public void updateStatistics(String teamName, String goalsScored, String goalsConceded) throws IOException, SQLException, ClassNotFoundException {
 
-		Class.forName("com.mysql.cj.jdbc.Driver");
+		if (!checkTeamExists(teamName)) {
+			JOptionPane.showMessageDialog(null, "Team not found");
+		}else {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection conn = DriverManager.getConnection(
+					"jdbc:mysql://localhost/users?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC", "root",
+					"password");
+				Statement stmt = conn.createStatement();
+				
+				int goalDifference = Integer.valueOf(goalsScored) - Integer.valueOf(goalsConceded);
+				
+				String query = "UPDATE leaguestandings SET GoalsScored = '" + goalsScored + "', GoalsConceded = '" + goalsConceded + "', GoalDifference = '" + goalDifference + "' WHERE TeamName = '"+ teamName + "';";
+				
+				stmt.executeUpdate(query);
+
+				JOptionPane.showMessageDialog(null, "Statistics updated");
+		}
+	}
+	
+	public boolean checkTeamExists(String teamName) throws SQLException {
+
 		Connection conn = DriverManager.getConnection(
-				"jdbc:mysql://localhost/users?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC", "root",
-				"password");
-			Statement stmt = conn.createStatement();
-			
-			int goalDifference = Integer.valueOf(goalsScored) - Integer.valueOf(goalsConceded);
-			
-			String query = "UPDATE leaguestandings SET GoalsScored = '" + goalsScored + "', GoalsConceded = '" + goalsConceded + "', GoalDifference = '" + goalDifference + "' WHERE TeamName = '"+ teamName + "';";
-			
-			stmt.executeUpdate(query);
+				"jdbc:mysql://localhost:3306/users?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC",
+				"root", "password");
+		Statement stmt = conn.createStatement();
+		String SQL = "select * from leaguestandings where TeamName = '" + teamName + "';";
+
+		ResultSet rset = stmt.executeQuery(SQL);
+		
+		if (rset.next()) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 }

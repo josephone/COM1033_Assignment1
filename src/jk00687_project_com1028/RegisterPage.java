@@ -19,9 +19,9 @@ import javax.swing.JButton;
 public class RegisterPage {
 
 	private JFrame frame;
-	private JTextField usernameChoice;
-	private JTextField passwordChoice;
-	private JTextField roleChoice;
+	private JTextField usernameChoice = null;
+	private JTextField passwordChoice = null;
+	private JTextField roleChoice = null;
 	private boolean inputChoice = false;
 
 	/**
@@ -29,6 +29,7 @@ public class RegisterPage {
 	 */
 	public static void main() {
 		EventQueue.invokeLater(new Runnable() {
+			@Override
 			public void run() {
 				try {
 					RegisterPage window = new RegisterPage();
@@ -101,9 +102,11 @@ public class RegisterPage {
 					LogOnPage.main();
 					frame.dispose();
 				} catch (ClassNotFoundException e) {
+					JOptionPane.showMessageDialog(null, "Registration unsuccessful");
 					e.printStackTrace();
 
 				} catch (SQLException e) {
+					JOptionPane.showMessageDialog(null, "Registration unsuccessful");
 					e.printStackTrace();
 				}
 			}

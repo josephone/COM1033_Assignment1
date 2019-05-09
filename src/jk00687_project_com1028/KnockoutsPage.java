@@ -13,15 +13,16 @@ import javax.swing.JTextField;
 public class KnockoutsPage {
 
 	private JFrame frame;
-	private JTextField teamName;
-	private JTextField goalsScored;
-	private JTextField goalsConceded;
+	private JTextField teamName = null;
+	private JTextField goalsScored = null;
+	private JTextField goalsConceded = null;
 
 	/**
 	 * Launch the application.
 	 */
 	public static void main() {
 		EventQueue.invokeLater(new Runnable() {
+			@Override
 			public void run() {
 				try {
 					KnockoutsPage window = new KnockoutsPage();
@@ -96,7 +97,6 @@ public class KnockoutsPage {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				
 				updateKnockouts(teamNameString, goalsScoredString, goalsConcededString);
 				JOptionPane.showMessageDialog(null, "Knockouts updated");
 			}
