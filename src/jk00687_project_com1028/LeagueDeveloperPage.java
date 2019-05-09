@@ -157,7 +157,7 @@ public class LeagueDeveloperPage {
 				"password")) {
 			Statement stmt = conn.createStatement();
 
-			if (checkTeamExists(teamNameFinal)) {
+			if (checkTeamExists(teamNameFinal)&& goalsScored != null && goalsConceded != null) {
 
 				int goalSc = Integer.valueOf(goalsScoredFinal);
 				int goalCon = Integer.valueOf(goalsConcededFinal);
@@ -309,22 +309,15 @@ public class LeagueDeveloperPage {
 					stmt.executeUpdate(insertdata);
 
 				} else {
-					throw new IllegalArgumentException("Result must be a 'Win', 'Draw' or 'Loss'");
+					throw new IllegalArgumentException("Incorrect details entered");
 				}
 
 			} else {
+				String createTable = "CREATE TABLE IF NOT EXISTS leaguestandings(TeamName VARCHAR(50),GamesPlayed int, Wins int, Draws int, Losses int, GoalsScored int, GoalsConceded int, GoalDifference int, Points int);";
 
-				try {
+				stmt.executeUpdate(createTable);
 
-					String createTable = "CREATE TABLE IF NOT EXISTS leaguestandings(TeamName VARCHAR(50),GamesPlayed int, Wins int, Draws int, Losses int, GoalsScored int, GoalsConceded int, GoalDifference int, Points int);";
-
-					stmt.executeUpdate(createTable);
-
-					newTeamInput(teamNameFinal, goalsScoredFinal, goalsConcededFinal);
-
-				} finally {
-
-				}
+				newTeamInput(teamNameFinal, goalsScoredFinal, goalsConcededFinal);
 			}
 		}
 	}
