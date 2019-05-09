@@ -70,30 +70,30 @@ public class LeagueDeveloperPage {
 		frame.getContentPane().add(lblLeagueDeveloperView);
 
 		JTextField teamName = new JTextField();
-		teamName.setBounds(105, 58, 86, 20);
+		teamName.setBounds(134, 58, 86, 20);
 		frame.getContentPane().add(teamName);
 		teamName.setColumns(10);
 
 		JLabel lblNewLabel = new JLabel("Team name:");
-		lblNewLabel.setBounds(10, 61, 67, 14);
+		lblNewLabel.setBounds(10, 61, 114, 14);
 		frame.getContentPane().add(lblNewLabel);
 
 		JTextField goalsScored = new JTextField();
-		goalsScored.setBounds(105, 89, 86, 20);
+		goalsScored.setBounds(134, 91, 86, 20);
 		frame.getContentPane().add(goalsScored);
 		goalsScored.setColumns(10);
 
 		JLabel lblGoalsScored = new JLabel("Goals Scored:");
-		lblGoalsScored.setBounds(10, 94, 67, 14);
+		lblGoalsScored.setBounds(10, 94, 114, 14);
 		frame.getContentPane().add(lblGoalsScored);
 
 		JTextField goalsConceded = new JTextField();
-		goalsConceded.setBounds(105, 126, 86, 20);
+		goalsConceded.setBounds(134, 126, 86, 20);
 		frame.getContentPane().add(goalsConceded);
 		goalsConceded.setColumns(10);
 
 		JLabel lblGoalsConceded = new JLabel("Goals Conceded:");
-		lblGoalsConceded.setBounds(10, 129, 85, 14);
+		lblGoalsConceded.setBounds(10, 129, 114, 14);
 		frame.getContentPane().add(lblGoalsConceded);
 
 		JButton updateTableBtn = new JButton("Update tables");

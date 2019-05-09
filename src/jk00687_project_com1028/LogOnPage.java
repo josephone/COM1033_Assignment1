@@ -3,7 +3,6 @@ package jk00687_project_com1028;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -16,13 +15,14 @@ import javax.swing.JTextField;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JButton;
+import javax.swing.JPasswordField;
 
 public class LogOnPage {
 
 	private JFrame frame;
 	private JTextField usernameEnter;
-	private JTextField passwordEnter;
 	private int count = 0;
+	private JPasswordField passwordField;
 
 	/**
 	 * Launch the application.
@@ -61,11 +61,6 @@ public class LogOnPage {
 		frame.getContentPane().add(usernameEnter);
 		usernameEnter.setColumns(10);
 
-		passwordEnter = new JTextField();
-		passwordEnter.setBounds(109, 107, 86, 20);
-		frame.getContentPane().add(passwordEnter);
-		passwordEnter.setColumns(10);
-
 		JLabel lblEnterUsername = new JLabel("Enter username:");
 		lblEnterUsername.setBounds(10, 54, 89, 14);
 		frame.getContentPane().add(lblEnterUsername);
@@ -78,12 +73,16 @@ public class LogOnPage {
 		btnLogIn.setBounds(86, 157, 89, 23);
 		frame.getContentPane().add(btnLogIn);
 		
+		passwordField = new JPasswordField();
+		passwordField.setBounds(109, 107, 86, 20);
+		frame.getContentPane().add(passwordField);
+		
 		btnLogIn.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				String username = usernameEnter.getText();
-				String password = passwordEnter.getText();
+				String password = new String (passwordField.getPassword());
 				
 
 				try {
@@ -168,5 +167,4 @@ public class LogOnPage {
 		return result.getString(1).toString();
 
 	}
-
 }

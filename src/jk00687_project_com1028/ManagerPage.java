@@ -65,7 +65,7 @@ public class ManagerPage {
 		teamName.setColumns(10);
 
 		JLabel lblEnterGoalkeeperName = new JLabel("Enter goalkeeper name:");
-		lblEnterGoalkeeperName.setBounds(10, 91, 127, 14);
+		lblEnterGoalkeeperName.setBounds(10, 91, 144, 14);
 		frame.getContentPane().add(lblEnterGoalkeeperName);
 
 		goalkeeperName = new JTextField();

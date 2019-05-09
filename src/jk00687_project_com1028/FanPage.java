@@ -158,12 +158,8 @@ public class FanPage {
 	}
 
 	public void showKnockouts(JTable tableKnockouts) {
-		/*
-		 * try { BufferedReader input = new BufferedReader(new InputStreamReader( new
-		 * FileInputStream(
-		 * "C:/Users/hunya/Documents/GitHub/COM1033_Assignment1/knockout_tree.txt")));
-		 * table2.read(input, ""); } catch (Exception e) { e.printStackTrace(); }
-		 */
+		
+		
 	}
 
 	public void showTable(JTable leagueTableStandings) throws SQLException, ClassNotFoundException {
@@ -176,7 +172,6 @@ public class FanPage {
 		Statement stmt = conn.createStatement();
 
 		String showtable = "SELECT * FROM leaguestandings ORDER BY points DESC;";
-		String st = null;
 		ResultSet showTableOverall = stmt.executeQuery(showtable);
 		while (showTableOverall.next()) {
 

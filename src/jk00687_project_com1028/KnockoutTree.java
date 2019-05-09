@@ -1,5 +1,6 @@
 package jk00687_project_com1028;
 
+
 public class KnockoutTree {
 
 	private Node root = null;
@@ -13,22 +14,41 @@ public class KnockoutTree {
 		return root;
 	}
 	
-	public void addTeamToTree(int value) {
-		
+	public void addTeamToTree(int value, Node node) {
+		if (value < node.getScore()) {
+			if (node.getTeamLeft() == null) {
+				node.setTeamLeft(new Node(value));
+			} else {
+				addTeamToTree(value, node.getTeamLeft());
+			}
+		} else {
+			if (node.getTeamRight() == null) {
+				node.setTeamRight(new Node(value));
+			} else {
+				addTeamToTree(value, node.getTeamRight());
+			}
+		}
 	}
 
 	public int greatest() {
 		
-		return 0;
+		return maxNode(root);
 	}
 	
 	public int maxNode(Node node) {
-		
-		return 0;
+		if (node.getTeamRight() == null) {
+			return node.getScore();
+		} else
+			return maxNode(node.getTeamRight());
 	}
 	
 	public void teamProceed(Node startPoint) {
 		
+		if (startPoint != null) {
+			teamProceed(startPoint.getTeamLeft());
+			System.out.print(startPoint.getScore() + "  ");
+			teamProceed(startPoint.getTeamRight());
+		}
 		
 	}
 }
