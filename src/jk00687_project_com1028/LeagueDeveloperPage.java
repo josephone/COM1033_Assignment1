@@ -125,11 +125,11 @@ public class LeagueDeveloperPage {
 		JButton editStatsBtn = new JButton("Edit statistics");
 		editStatsBtn.setBounds(290, 227, 134, 23);
 		frame.getContentPane().add(editStatsBtn);
-		
+
 		JButton btnUpdateKnockouts = new JButton("Update knockouts");
 		btnUpdateKnockouts.setBounds(134, 227, 146, 23);
 		frame.getContentPane().add(btnUpdateKnockouts);
-		
+
 		btnUpdateKnockouts.addActionListener(new ActionListener() {
 
 			@Override
@@ -139,7 +139,7 @@ public class LeagueDeveloperPage {
 			}
 
 		});
-		
+
 		JLabel lblEnterResultsOf = new JLabel("Enter results of league fixture below");
 		lblEnterResultsOf.setBounds(10, 73, 210, 14);
 		frame.getContentPane().add(lblEnterResultsOf);
@@ -329,8 +329,7 @@ public class LeagueDeveloperPage {
 
 					newTeamInput(teamNameFinal, goalsScoredFinal, goalsConcededFinal);
 
-				}
-				finally {
+				} finally {
 
 				}
 			}
