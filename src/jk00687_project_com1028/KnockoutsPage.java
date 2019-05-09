@@ -1,9 +1,12 @@
 package jk00687_project_com1028;
 
 import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JButton;
 import javax.swing.JTextField;
 
@@ -84,5 +87,24 @@ public class KnockoutsPage {
 		goalsConceded.setBounds(126, 187, 86, 20);
 		frame.getContentPane().add(goalsConceded);
 		goalsConceded.setColumns(10);
+		
+		String teamNameString = teamName.getText();
+		String goalsScoredString = goalsScored.getText();
+		String goalsConcededString = goalsConceded.getText();
+		
+		btnSubmit.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				
+				updateKnockouts(teamNameString, goalsScoredString, goalsConcededString);
+				JOptionPane.showMessageDialog(null, "Knockouts updated");
+			}
+
+		});
+	}
+	
+	public void updateKnockouts(String teamName, String goalsScored, String goalsConceded) {
+		
 	}
 }
