@@ -70,30 +70,30 @@ public class LeagueDeveloperPage {
 		frame.getContentPane().add(lblLeagueDeveloperView);
 
 		JTextField teamName = new JTextField();
-		teamName.setBounds(134, 58, 86, 20);
+		teamName.setBounds(134, 102, 86, 20);
 		frame.getContentPane().add(teamName);
 		teamName.setColumns(10);
 
 		JLabel lblNewLabel = new JLabel("Team name:");
-		lblNewLabel.setBounds(10, 61, 114, 14);
+		lblNewLabel.setBounds(10, 105, 114, 14);
 		frame.getContentPane().add(lblNewLabel);
 
 		JTextField goalsScored = new JTextField();
-		goalsScored.setBounds(134, 91, 86, 20);
+		goalsScored.setBounds(134, 130, 86, 20);
 		frame.getContentPane().add(goalsScored);
 		goalsScored.setColumns(10);
 
 		JLabel lblGoalsScored = new JLabel("Goals Scored:");
-		lblGoalsScored.setBounds(10, 94, 114, 14);
+		lblGoalsScored.setBounds(10, 133, 114, 14);
 		frame.getContentPane().add(lblGoalsScored);
 
 		JTextField goalsConceded = new JTextField();
-		goalsConceded.setBounds(134, 126, 86, 20);
+		goalsConceded.setBounds(134, 155, 86, 20);
 		frame.getContentPane().add(goalsConceded);
 		goalsConceded.setColumns(10);
 
 		JLabel lblGoalsConceded = new JLabel("Goals Conceded:");
-		lblGoalsConceded.setBounds(10, 129, 114, 14);
+		lblGoalsConceded.setBounds(10, 158, 114, 14);
 		frame.getContentPane().add(lblGoalsConceded);
 
 		JButton updateTableBtn = new JButton("Update tables");
@@ -123,8 +123,26 @@ public class LeagueDeveloperPage {
 		});
 
 		JButton editStatsBtn = new JButton("Edit statistics");
-		editStatsBtn.setBounds(263, 183, 134, 23);
+		editStatsBtn.setBounds(290, 227, 134, 23);
 		frame.getContentPane().add(editStatsBtn);
+		
+		JButton btnUpdateKnockouts = new JButton("Update knockouts");
+		btnUpdateKnockouts.setBounds(134, 227, 146, 23);
+		frame.getContentPane().add(btnUpdateKnockouts);
+		
+		btnUpdateKnockouts.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				KnockoutsPage.main();
+				frame.dispose();
+			}
+
+		});
+		
+		JLabel lblEnterResultsOf = new JLabel("Enter results of league fixture below");
+		lblEnterResultsOf.setBounds(10, 73, 210, 14);
+		frame.getContentPane().add(lblEnterResultsOf);
 		editStatsBtn.addActionListener(new ActionListener() {
 
 			@Override
