@@ -1,7 +1,10 @@
 package jk00687_project_com1028;
 
 import java.awt.EventQueue;
+import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -19,6 +22,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
 
 public class FanPage {
 
@@ -28,7 +32,6 @@ public class FanPage {
 			"Goals Conceded", "Goal Difference", "Points" };
 	DefaultTableModel tableModel = new DefaultTableModel(headers, 0);
 	private JTable leagueTable;
-	private JTable tableKnockouts;
 
 	/**
 	 * Launch the application.
@@ -105,16 +108,15 @@ public class FanPage {
 		btnSearch.setBounds(498, 40, 221, 32);
 		frame.getContentPane().add(btnSearch);
 
-		tableKnockouts = new JTable();
-		tableKnockouts.setBounds(20, 310, 723, 138);
-		frame.getContentPane().add(tableKnockouts);
-
-		showKnockouts(tableKnockouts);
-
 		JLabel lblTeamName = new JLabel(
 				"Team Name   Games Played   Wins                 Draws            Losses        Goals Scored    Goals Conceded Goal Difference   Points");
 		lblTeamName.setBounds(20, 103, 723, 14);
 		frame.getContentPane().add(lblTeamName);
+		
+		JTextArea knockoutsStandings = new JTextArea();
+		knockoutsStandings.setBounds(20, 299, 720, 149);
+		frame.getContentPane().add(knockoutsStandings);
+		showKnockouts(knockoutsStandings);
 
 		btnSearch.addActionListener(new ActionListener() {
 			@Override
@@ -139,7 +141,29 @@ public class FanPage {
 
 	}
 
-	public void showKnockouts(JTable tableKnockouts) {
+	public void showKnockouts(JTextArea knockoutsArea) {
+		
+		File file = new File("C:\\Users\\hunya\\Documents\\GitHub\\COM1028_Assignment1\\knockout_tree.txt");
+		  
+		  BufferedReader br = null;
+		try {
+			br = new BufferedReader(new FileReader(file));
+		} catch (FileNotFoundException e1) {
+			JOptionPane.showMessageDialog(null, "File not found");
+			e1.printStackTrace();
+		} 
+		  
+		  String st = null;
+		  
+		  try {
+			while ((st = br.readLine()) != null) {
+				  knockoutsArea.setText(st);
+			  }
+		} catch (IOException e) {
+			JOptionPane.showMessageDialog(null, "Error");
+			e.printStackTrace();
+		}
+		    
 
 	}
 
