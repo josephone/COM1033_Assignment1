@@ -110,8 +110,9 @@ public class FanPage {
 		frame.getContentPane().add(tableKnockouts);
 
 		showKnockouts(tableKnockouts);
-		
-		JLabel lblTeamName = new JLabel("Team Name   Games Played   Wins                 Draws            Losses        Goals Scored    Goals Conceded Goal Difference   Points");
+
+		JLabel lblTeamName = new JLabel(
+				"Team Name   Games Played   Wins                 Draws            Losses        Goals Scored    Goals Conceded Goal Difference   Points");
 		lblTeamName.setBounds(20, 103, 723, 14);
 		frame.getContentPane().add(lblTeamName);
 
@@ -139,18 +140,16 @@ public class FanPage {
 	}
 
 	public void showKnockouts(JTable tableKnockouts) {
-		
-		
+
 	}
 
 	public void showTable(JTable leagueTableStandings) throws SQLException, ClassNotFoundException {
-	
-		Connection conn = DriverManager.getConnection(
-				"jdbc:sqlite:users");
+
+		Connection conn = DriverManager.getConnection("jdbc:sqlite:users");
 
 		Statement stmt = conn.createStatement();
 
-		String showtable = "SELECT * FROM leaguestandings ORDER BY points DESC;";
+		String showtable = "SELECT * FROM leaguestandings ORDER BY Points DESC;";
 		ResultSet showTableOverall = stmt.executeQuery(showtable);
 		while (showTableOverall.next()) {
 
@@ -165,43 +164,40 @@ public class FanPage {
 		conn.close();
 	}
 
-	public void tableSearch(String teamName, JTable tableStandings) throws IOException, ClassNotFoundException, SQLException {
-	
+	public void tableSearch(String teamName, JTable tableStandings)
+			throws IOException, ClassNotFoundException, SQLException {
+
 		if (findTeam(teamName) == true) {
-			Connection conn = DriverManager.getConnection(
-					"jdbc:sqlite:users");
+			Connection conn = DriverManager.getConnection("jdbc:sqlite:users");
 
 			Statement stmt = conn.createStatement();
-			
+
 			String query = "SELECT * FROM leagueStandings WHERE TeamName = '" + teamName + "';";
 			String q = null;
-			
+
 			ResultSet queryResult = stmt.executeQuery(query);
-			
-			for( int i = tableModel.getRowCount() - 1; i >= 0; i-- ) {
-		        tableModel.removeRow(i);
-		    }
-			
+
+			for (int i = tableModel.getRowCount() - 1; i >= 0; i--) {
+				tableModel.removeRow(i);
+			}
+
 			while (queryResult.next()) {
 				String[] topRow = { queryResult.getString("TeamName"), queryResult.getString("GamesPlayed"),
-						queryResult.getString("Wins"), queryResult.getString("Draws"),
-						queryResult.getString("Losses"), queryResult.getString("GoalsScored"),
-						queryResult.getString("GoalsConceded"), queryResult.getString("GoalDifference"),
-						queryResult.getString("Points") };
+						queryResult.getString("Wins"), queryResult.getString("Draws"), queryResult.getString("Losses"),
+						queryResult.getString("GoalsScored"), queryResult.getString("GoalsConceded"),
+						queryResult.getString("GoalDifference"), queryResult.getString("Points") };
 
 				tableModel.addRow(topRow);
 			}
 			conn.close();
-			}else {
-				JOptionPane.showMessageDialog(null, "Team not found");
+		} else {
+			JOptionPane.showMessageDialog(null, "Team not found");
 		}
-		
-		
+
 	}
 
 	public boolean findTeam(String teamName) throws SQLException {
-		Connection conn = DriverManager.getConnection(
-				"jdbc:sqlite:users");
+		Connection conn = DriverManager.getConnection("jdbc:sqlite:users");
 		Statement stmt = conn.createStatement();
 		String SQL = "select * from leaguestandings where TeamName = '" + teamName + "';";
 

@@ -150,11 +150,12 @@ public class LeagueDeveloperPage {
 
 	public void updateTable(String teamNameFinal, String goalsScoredFinal, String goalsConcededFinal)
 			throws IllegalArgumentException, IOException, ClassNotFoundException, SQLException {
-		try (Connection conn = DriverManager.getConnection(
-				"jdbc:sqlite:users")) {
-			Statement stmt = conn.createStatement();
+			
+				Connection conn = DriverManager.getConnection("jdbc:sqlite:users");
+				Statement stmt = conn.createStatement();
 
-			if (checkTeamExists(teamNameFinal)&& goalsScored != null && goalsConceded != null) {
+			if (checkTeamExists(teamNameFinal)) {
+				
 
 				int goalSc = Integer.valueOf(goalsScoredFinal);
 				int goalCon = Integer.valueOf(goalsConcededFinal);
@@ -313,31 +314,29 @@ public class LeagueDeveloperPage {
 				}
 
 			} else {
-				String createTable = "CREATE TABLE IF NOT EXISTS leaguestandings(TeamName VARCHAR(50),GamesPlayed int, Wins int, Draws int, Losses int, GoalsScored int, GoalsConceded int, GoalDifference int, Points int);";
-
-				stmt.executeUpdate(createTable);
-
 				newTeamInput(teamNameFinal, goalsScoredFinal, goalsConcededFinal);
 			}
-		}
+		
 	}
 
 	public boolean checkTeamExists(String teamName) throws SQLException {
 
-		Connection conn = DriverManager.getConnection(
-				"jdbc:sqlite:users");
-		Statement stmt = conn.createStatement();
-		String SQL = "select * from leaguestandings where TeamName = '" + teamName + "';";
+		try (Connection conn = DriverManager.getConnection("jdbc:sqlite:users");
+		Statement stmt = conn.createStatement()){
+			String SQL = "select * from leaguestandings where TeamName = '" + teamName + "';";
 
 		ResultSet rset = stmt.executeQuery(SQL);
-
+		conn.close();
 		if (rset.next()) {
-			conn.close();
+			rset.close();
 			return true;
 		} else {
+			rset.close();
 			return false;
 		}
+		}
 		
+
 	}
 
 	public void newTeamInput(String teamNameFinal, String goalsScoredFinal, String goalsConcededFinal)
@@ -347,8 +346,7 @@ public class LeagueDeveloperPage {
 		int goalCon = Integer.valueOf(goalsConcededFinal);
 		int goalDifference = goalSc - goalCon;
 
-		Connection conn = DriverManager.getConnection(
-				"jdbc:sqlite:users");
+		Connection conn = DriverManager.getConnection("jdbc:sqlite:users");
 		Statement stmt = conn.createStatement();
 
 		if (Integer.valueOf(goalsScoredFinal) > Integer.valueOf(goalsConcededFinal)) {

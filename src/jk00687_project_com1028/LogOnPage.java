@@ -43,15 +43,19 @@ public class LogOnPage {
 
 	/**
 	 * Create the application.
+	 * 
+	 * @throws SQLException
 	 */
-	public LogOnPage() {
+	public LogOnPage() throws SQLException {
 		initialize();
 	}
 
 	/**
 	 * Initialize the contents of the frame.
+	 * 
+	 * @throws SQLException
 	 */
-	private void initialize() {
+	private void initialize() throws SQLException {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 450, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -73,18 +77,17 @@ public class LogOnPage {
 		JButton btnLogIn = new JButton("Log in");
 		btnLogIn.setBounds(86, 157, 89, 23);
 		frame.getContentPane().add(btnLogIn);
-		
+
 		passwordField = new JPasswordField();
 		passwordField.setBounds(109, 107, 86, 20);
 		frame.getContentPane().add(passwordField);
-		
-		btnLogIn.addActionListener(new ActionListener() {
 
+		btnLogIn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				String username = usernameEnter.getText();
-				String password = new String (passwordField.getPassword());
-				
+				String password = new String(passwordField.getPassword());
+
 				try {
 					if (checkExists(username, password)) {
 						switch (checkRole(username)) {
@@ -132,39 +135,39 @@ public class LogOnPage {
 
 	public boolean checkExists(String username, String password) throws SQLException {
 
-		Connection conn = DriverManager.getConnection(
-				"jdbc:sqlite:users");
-		Statement stmt = conn.createStatement();
+		try (Connection conn = DriverManager.getConnection("jdbc:sqlite:users");
+				Statement stmt = conn.createStatement()) {
+			String SQL = "select * from users where username = ? and password = ? ";
+			PreparedStatement preparedStatement = conn.prepareStatement(SQL);
+			preparedStatement.setString(1, username);
+			preparedStatement.setString(2, password);
 
-		String SQL = "select * from users where username = ? and password = ? ";
-		PreparedStatement preparedStatement = conn.prepareStatement(SQL);
-		preparedStatement.setString(1, username);
-		preparedStatement.setString(2, password);
+			ResultSet rset = preparedStatement.executeQuery();
 
-		ResultSet rset = preparedStatement.executeQuery();
-		conn.close();
-		if (rset.next()) {
-			
-			return true;
-		} else {
-			return false;
+			if (rset.next()) {
+				conn.close();
+				return true;
+			} else {
+				return false;
+			}
 		}
+
 	}
 
 	public String checkRole(String username) throws SQLException {
+		try (Connection conn = DriverManager.getConnection("jdbc:sqlite:users");
+		Statement stmt = conn.createStatement()){
 
-		Connection conn = DriverManager.getConnection(
-				"jdbc:sqlite:users");
-		String SQL = "select role from users where username = '" + username + "';";
-		Statement stmt = conn.createStatement();
+			String SQL = "select role from users where username = '" + username + "';";
 
-		ResultSet result = stmt.executeQuery(SQL);
-		
-		result.next();
-		
-		String resultRole = result.getString(1).toString();
-		conn.close();
-		
-		return resultRole;
+			ResultSet result = stmt.executeQuery(SQL);
+
+			result.next();
+
+			String resultRole = result.getString(1).toString();
+			result.close();
+			conn.close();
+			return resultRole;
+		}
 	}
 }
