@@ -22,7 +22,6 @@ public class LeagueDeveloperPage {
 	private JTextField teamName = null;
 	private JTextField goalsScored = null;
 	private JTextField goalsConceded = null;
-	private JTextField matchResult = null;
 
 	/**
 	 * Launch the application.

@@ -3,6 +3,9 @@ package jk00687_project_com1028;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -97,14 +100,29 @@ public class KnockoutsPage {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				updateKnockouts(teamNameString, goalsScoredString, goalsConcededString);
-				JOptionPane.showMessageDialog(null, "Knockouts updated");
+				try {
+					updateKnockouts(teamNameString, goalsScoredString, goalsConcededString);
+					JOptionPane.showMessageDialog(null, "Knockouts updated");
+				} catch (FileNotFoundException e) {
+					JOptionPane.showMessageDialog(null, "File not found");
+					e.printStackTrace();
+				}
 			}
 
 		});
 	}
 	
-	public void updateKnockouts(String teamName, String goalsScored, String goalsConceded) {
-		
+	public void updateKnockouts(String teamName, String goalsScored, String goalsConceded) throws FileNotFoundException {
+		 FileOutputStream fstream = new FileOutputStream("C:\\Users\\hunya\\Documents\\GitHub\\COM1028_Assignment1\\knockout_tree.txt");    
+         try {
+			fstream.write(null);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}    
+         try {
+			fstream.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}   
 	}
 }
