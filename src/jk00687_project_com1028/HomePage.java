@@ -44,7 +44,7 @@ public class HomePage {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
-		JButton btnRegisterNewAccount = new JButton("Register new account");
+		JButton btnRegisterNewAccount = new JButton("Register account");
 		btnRegisterNewAccount.setBounds(33, 145, 145, 71);
 		frame.getContentPane().add(btnRegisterNewAccount);
 		btnRegisterNewAccount.addActionListener(new ActionListener() {

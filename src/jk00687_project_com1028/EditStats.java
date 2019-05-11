@@ -59,7 +59,7 @@ public class EditStats {
 		frame.getContentPane().setLayout(null);
 
 		JLabel lblLeagueDeveloperView = new JLabel("League developer view");
-		lblLeagueDeveloperView.setBounds(10, 11, 119, 14);
+		lblLeagueDeveloperView.setBounds(10, 11, 164, 14);
 		frame.getContentPane().add(lblLeagueDeveloperView);
 
 		JLabel lblTeamName = new JLabel("Team name:");

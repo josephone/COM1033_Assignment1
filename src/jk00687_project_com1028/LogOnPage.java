@@ -62,16 +62,16 @@ public class LogOnPage {
 		frame.getContentPane().setLayout(null);
 
 		usernameEnter = new JTextField();
-		usernameEnter.setBounds(109, 51, 86, 20);
+		usernameEnter.setBounds(126, 51, 86, 20);
 		frame.getContentPane().add(usernameEnter);
 		usernameEnter.setColumns(10);
 
 		JLabel lblEnterUsername = new JLabel("Enter username:");
-		lblEnterUsername.setBounds(10, 54, 89, 14);
+		lblEnterUsername.setBounds(10, 54, 106, 14);
 		frame.getContentPane().add(lblEnterUsername);
 
 		JLabel lblEnterPassword = new JLabel("Enter password:");
-		lblEnterPassword.setBounds(10, 110, 89, 14);
+		lblEnterPassword.setBounds(10, 110, 106, 14);
 		frame.getContentPane().add(lblEnterPassword);
 
 		JButton btnLogIn = new JButton("Log in");
@@ -79,7 +79,7 @@ public class LogOnPage {
 		frame.getContentPane().add(btnLogIn);
 
 		passwordField = new JPasswordField();
-		passwordField.setBounds(109, 107, 86, 20);
+		passwordField.setBounds(126, 107, 86, 20);
 		frame.getContentPane().add(passwordField);
 
 		btnLogIn.addActionListener(new ActionListener() {

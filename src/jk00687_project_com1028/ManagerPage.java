@@ -61,7 +61,7 @@ public class ManagerPage {
 		frame.getContentPane().add(lblEnterTeamName);
 
 		teamName = new JTextField();
-		teamName.setBounds(164, 53, 86, 20);
+		teamName.setBounds(174, 53, 86, 20);
 		frame.getContentPane().add(teamName);
 		teamName.setColumns(10);
 
@@ -70,7 +70,7 @@ public class ManagerPage {
 		frame.getContentPane().add(lblEnterGoalkeeperName);
 
 		goalkeeperName = new JTextField();
-		goalkeeperName.setBounds(164, 88, 86, 20);
+		goalkeeperName.setBounds(174, 84, 86, 20);
 		frame.getContentPane().add(goalkeeperName);
 		goalkeeperName.setColumns(10);
 
@@ -79,7 +79,7 @@ public class ManagerPage {
 		frame.getContentPane().add(lblNewLabel);
 
 		defenderName = new JTextField();
-		defenderName.setBounds(164, 119, 86, 20);
+		defenderName.setBounds(174, 119, 86, 20);
 		frame.getContentPane().add(defenderName);
 		defenderName.setColumns(10);
 
@@ -88,7 +88,7 @@ public class ManagerPage {
 		frame.getContentPane().add(lblEnterNamesOf);
 
 		midfielderName = new JTextField();
-		midfielderName.setBounds(164, 152, 86, 20);
+		midfielderName.setBounds(174, 150, 86, 20);
 		frame.getContentPane().add(midfielderName);
 		midfielderName.setColumns(10);
 
@@ -97,7 +97,7 @@ public class ManagerPage {
 		frame.getContentPane().add(lblEnterNameOf);
 
 		attackerName = new JTextField();
-		attackerName.setBounds(164, 184, 86, 20);
+		attackerName.setBounds(174, 181, 86, 20);
 		frame.getContentPane().add(attackerName);
 		attackerName.setColumns(10);
 
@@ -136,7 +136,7 @@ public class ManagerPage {
 			String attackerName) throws FileNotFoundException, UnsupportedEncodingException {
 
 		PrintWriter writer = new PrintWriter(
-				"C:/Users/hunya/Documents/GitHub/COM1033_Assignment1/" + teamName + "TeamSheet.txt", "UTF-8");
+				"C:/Users/hunya/Documents/GitHub/COM1028_Assignment1/" + teamName + "TeamSheet.txt", "UTF-8");
 		writer.println("Gaolkeeper: " + goalkeeperName);
 		writer.println("Defenders: " + defenderName);
 		writer.println("Midfielders: " + midfielderName);
