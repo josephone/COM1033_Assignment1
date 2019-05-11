@@ -117,6 +117,20 @@ public class FanPage {
 		knockoutsStandings.setBounds(20, 299, 720, 149);
 		frame.getContentPane().add(knockoutsStandings);
 		showKnockouts(knockoutsStandings);
+		
+		JButton btnBackToHome = new JButton("Back to home");
+		btnBackToHome.setBounds(96, 0, 124, 23);
+		frame.getContentPane().add(btnBackToHome);
+		btnBackToHome.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				HomePage.main(null);
+				frame.dispose();
+				
+			}
+			
+		});
 
 		btnSearch.addActionListener(new ActionListener() {
 			@Override
