@@ -136,7 +136,7 @@ public class ManagerPage {
 			String attackerName) throws FileNotFoundException, UnsupportedEncodingException {
 
 		PrintWriter writer = new PrintWriter(
-				"C:/Users/hunya/Documents/GitHub/COM1028_Assignment1/" + teamName + "TeamSheet.txt", "UTF-8");
+				"C:\\Users\\Public\\" + teamName + "TeamSheet.txt", "UTF-8");
 		writer.println("Gaolkeeper: " + goalkeeperName);
 		writer.println("Defenders: " + defenderName);
 		writer.println("Midfielders: " + midfielderName);
