@@ -2,10 +2,15 @@ package jk00687_project_com1028;
 
 import java.awt.EventQueue;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
+import java.io.Writer;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -54,22 +59,22 @@ public class FanPage {
 	/**
 	 * Create the application.
 	 * 
-	 * @throws FileNotFoundException
 	 * @throws SQLException
 	 * @throws ClassNotFoundException
+	 * @throws IOException 
 	 */
-	public FanPage() throws FileNotFoundException, ClassNotFoundException, SQLException {
+	public FanPage() throws ClassNotFoundException, SQLException, IOException {
 		initialize();
 	}
 
 	/**
 	 * Initialize the contents of the frame.
 	 * 
-	 * @throws FileNotFoundException
 	 * @throws SQLException
 	 * @throws ClassNotFoundException
+	 * @throws IOException 
 	 */
-	private void initialize() throws FileNotFoundException, ClassNotFoundException, SQLException {
+	private void initialize() throws ClassNotFoundException, SQLException, IOException {
 
 		frame = new JFrame();
 		frame.setBounds(100, 100, 769, 498);
@@ -113,6 +118,8 @@ public class FanPage {
 		lblTeamName.setBounds(20, 103, 723, 14);
 		frame.getContentPane().add(lblTeamName);
 		
+		createKnockouts();
+		
 		JTextArea knockoutsStandings = new JTextArea();
 		knockoutsStandings.setBounds(20, 299, 720, 149);
 		frame.getContentPane().add(knockoutsStandings);
@@ -121,6 +128,7 @@ public class FanPage {
 		JButton btnBackToHome = new JButton("Back to home");
 		btnBackToHome.setBounds(96, 0, 124, 23);
 		frame.getContentPane().add(btnBackToHome);
+		
 		btnBackToHome.addActionListener(new ActionListener() {
 
 			@Override
@@ -154,10 +162,30 @@ public class FanPage {
 		});
 
 	}
+	
+	public void createKnockouts() throws SQLException, IOException {
+		Connection conn = DriverManager.getConnection("jdbc:sqlite:users");
+		Statement stmt = conn.createStatement();
+		String SQL = "select TeamName from leaguestandings where GamesPlayed = '20';";
+		
+		ResultSet queryResult = stmt.executeQuery(SQL);
+		BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(
+		              new FileOutputStream("C:\\Users\\Public\\knockout_tree.txt"), "utf-8")); 
+		while (queryResult.next()) {
+			   
+	         try {
+				writer.append(queryResult.getString("TeamName"));
+				writer.newLine();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		writer.close();
+	}
 
 	public void showKnockouts(JTextArea knockoutsArea) {
 		
-		File file = new File("C:\\Users\\hunya\\Documents\\GitHub\\COM1028_Assignment1\\knockout_tree.txt");
+		File file = new File("C:\\Users\\Public\\knockout_tree.txt");
 		  
 		  BufferedReader br = null;
 		try {
@@ -171,7 +199,7 @@ public class FanPage {
 		  
 		  try {
 			while ((st = br.readLine()) != null) {
-				  knockoutsArea.setText(st);
+				knockoutsArea.append(st + "\n");
 			  }
 		} catch (IOException e) {
 			JOptionPane.showMessageDialog(null, "Error");
@@ -210,7 +238,7 @@ public class FanPage {
 
 			Statement stmt = conn.createStatement();
 
-			String query = "SELECT * FROM leagueStandings WHERE TeamName = '" + teamName + "';";
+			String query = "SELECT * FROM leagueStandings WHERE TeamName LIKE '%" + teamName + "%';";
 			String q = null;
 
 			ResultSet queryResult = stmt.executeQuery(query);
@@ -242,6 +270,7 @@ public class FanPage {
 		ResultSet rset = stmt.executeQuery(SQL);
 
 		if (rset.next()) {
+			conn.close();
 			return true;
 		} else {
 			return false;

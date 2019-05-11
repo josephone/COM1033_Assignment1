@@ -115,7 +115,7 @@ public class ManagerPage {
 				try {
 					updateTeamSheets(teamNameString, goalkeeperNameString, defenderNameString, midfielderNameString,
 							attackerNameString);
-					JOptionPane.showMessageDialog(null, "Team sheet updated");
+					JOptionPane.showMessageDialog(null, "Team sheet updated at C:\\Users\\Public\\");
 				} catch (FileNotFoundException | UnsupportedEncodingException e1) {
 					JOptionPane.showMessageDialog(null, "Error");
 					e1.printStackTrace();

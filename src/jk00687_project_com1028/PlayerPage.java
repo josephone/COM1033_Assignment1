@@ -80,6 +80,12 @@ public class PlayerPage {
 		lblEnterTheName.setBounds(10, 91, 256, 42);
 		frame.getContentPane().add(lblEnterTheName);
 
+
+		JTextArea teamStatistics = new JTextArea();
+		teamStatistics.setFont(new Font("Monospaced", Font.PLAIN, 10));
+		teamStatistics.setBounds(10, 180, 173, 106);
+		frame.getContentPane().add(teamStatistics);
+		
 		JButton btnSearch = new JButton("Search");
 		btnSearch.setBounds(287, 133, 89, 23);
 		frame.getContentPane().add(btnSearch);
@@ -91,7 +97,7 @@ public class PlayerPage {
 
 				try {
 					String teamNameString = teamName.getText();
-					viewTeamStatistics(teamNameString);
+					viewTeamStatistics(teamStatistics, teamNameString);
 				} catch (IOException e) {
 
 					e.printStackTrace();
@@ -109,12 +115,8 @@ public class PlayerPage {
 
 	}
 
-	public void viewTeamStatistics(String teamNameString) throws IOException, HeadlessException, SQLException {
+	public void viewTeamStatistics(JTextArea teamStatistics, String teamNameString) throws IOException, HeadlessException, SQLException {
 
-		JTextArea teamStatistics = new JTextArea();
-		teamStatistics.setFont(new Font("Monospaced", Font.PLAIN, 10));
-		teamStatistics.setBounds(10, 180, 340, 72);
-		frame.getContentPane().add(teamStatistics);
 
 		if (tableSearch(teamNameString, teamStatistics)) {
 
