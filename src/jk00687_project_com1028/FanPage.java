@@ -199,7 +199,9 @@ public class FanPage {
 		  
 		  try {
 			while ((st = br.readLine()) != null) {
-				knockoutsArea.append(st + "\n");
+				knockoutsArea.append(st + "\n"
+						+ ""
+						+ "");
 			  }
 		} catch (IOException e) {
 			JOptionPane.showMessageDialog(null, "Error");
