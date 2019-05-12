@@ -167,7 +167,7 @@ public class FanPage {
 		Connection conn = DriverManager.getConnection("jdbc:sqlite:users");
 		int count = 0;
 		Statement stmt = conn.createStatement();
-		String SQL = "select TeamName from leaguestandings where GamesPlayed = '20' ORDER BY Points DESC;";
+		String SQL = "select TeamName from leaguestandings where GamesPlayed >= '20' ORDER BY Points DESC;";
 		
 		ResultSet queryResult = stmt.executeQuery(SQL);
 		BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(
