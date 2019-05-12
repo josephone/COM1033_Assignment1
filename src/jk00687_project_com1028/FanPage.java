@@ -165,14 +165,18 @@ public class FanPage {
 	
 	public void createKnockouts() throws SQLException, IOException {
 		Connection conn = DriverManager.getConnection("jdbc:sqlite:users");
+		int count = 0;
 		Statement stmt = conn.createStatement();
-		String SQL = "select TeamName from leaguestandings where GamesPlayed = '20';";
+		String SQL = "select TeamName from leaguestandings where GamesPlayed = '20' ORDER BY Points DESC;";
 		
 		ResultSet queryResult = stmt.executeQuery(SQL);
 		BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(
 		              new FileOutputStream("C:\\Users\\Public\\knockout_tree.txt"), "utf-8")); 
-		while (queryResult.next()) {
-			   
+		
+		writer.append("Qualified teams are as follows:");
+		writer.newLine();
+		while (queryResult.next() && count < 8) {
+			   count ++;
 	         try {
 				writer.append(queryResult.getString("TeamName"));
 				writer.newLine();
