@@ -166,7 +166,7 @@ public class FanPage {
 
 			/*
 			 * Upon the 'Search' button being clicked, the value of the teamName JTextField
-			 * is converted into a String with an appropriate variable name so that they can
+			 * is converted into a String with an appropriate variable name so that it can
 			 * be passed as a parameter into the 'tableSearch' method. This code is wrapped
 			 * in a try-catch statement in order to handle exceptions being thrown and
 			 * errors being generated. I have caught an 'SQLException' since in the

@@ -107,7 +107,7 @@ public class KnockoutsPage {
 			 * called. This code is wrapped in a try-catch statement in order to handle
 			 * exceptions being thrown and errors being generated. I have caught a
 			 * 'FileNotFoundException' since the 'updateKnockouts' method will require the
-			 * program to write to a file
+			 * program to write to a file which may throw up this specific error
 			 * 
 			 */
 
@@ -141,6 +141,8 @@ public class KnockoutsPage {
 	 * @param goalsConceded This is the String equivalent value of the JTextField
 	 *                      'goalsConceded'
 	 * @throws FileNotFoundException A 'FileNotFoundException' is being thrown here
+	 *                               in order to protect the code in the case that 
+	 *                               a file has not been found
 	 */
 
 	public void updateKnockouts(String teamName, String goalsScored, String goalsConceded)

@@ -14,6 +14,10 @@ import java.io.UnsupportedEncodingException;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
 
+/**
+ * @author Joseph Kutler
+ *
+ */
 public class ManagerPage {
 
 	private JFrame frame;
@@ -103,6 +107,23 @@ public class ManagerPage {
 
 		JButton btnManager = new JButton("Update team sheets");
 		btnManager.addActionListener(new ActionListener() {
+
+			/*
+			 * Upon the 'Update team sheets' button being clicked, the values of the
+			 * JTextFields is converted into Strings with the appropriate variable names so
+			 * that they can be passed as parameters into the 'updateTeamSheets' method.
+			 * This code is wrapped in a try-catch statement in order to handle exceptions
+			 * being thrown and errors being generated. I have caught a
+			 * 'FileNotFoundException' since the 'updateKnockouts' method will require the
+			 * program to write to a file which may throw up this specific error.
+			 * Additionally I have thrown an 'UnsupportedEncodingException' which is being
+			 * created since I specify which type of encoding (UTF-8) I wish to include. If
+			 * the method is able to run as normal the user receives a dialog box which
+			 * specifies to them whereabouts the new text file containing the team sheet has
+			 * been created.
+			 * 
+			 */
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
@@ -132,11 +153,37 @@ public class ManagerPage {
 
 	}
 
+	/**
+	 * This method is used to update the team sheets for the team that is being
+	 * entered the information about and it takes in information for the goalkeeper
+	 * name, names of the defenders, midfielders and attackers and writes all of
+	 * this to a text file that is in a universally accessible file location. I
+	 * create an instance of the object type PrintWriter in order to be able to
+	 * create the file which is prefixed with the name of the team to make it more
+	 * uniquely identifiable.
+	 * 
+	 * @param teamName       This is the String equivalent value of the JTextField
+	 *                       'teamName'
+	 * @param goalkeeperName This is the String equivalent value of the JTextField
+	 *                       'goalKeeperName'
+	 * @param defenderName   This is the String equivalent value of the JTextField
+	 *                       'defenderName'
+	 * @param midfielderName This is the String equivalent value of the JTextField
+	 *                       'midfielderName'
+	 * @param attackerName   This is the String equivalent value of the JTextField
+	 *                       'attackerName'
+	 * @throws FileNotFoundException        A 'FileNotFoundException' is being
+	 *                                      thrown here in order to protect the code
+	 *                                      in the case that a file has not been
+	 *                                      found
+	 * @throws UnsupportedEncodingException This type of exception is being thrown
+	 *                                      here in case the encoding type is not
+	 *                                      allowed
+	 */
 	public void updateTeamSheets(String teamName, String goalkeeperName, String defenderName, String midfielderName,
 			String attackerName) throws FileNotFoundException, UnsupportedEncodingException {
 
-		PrintWriter writer = new PrintWriter(
-				"C:\\Users\\Public\\" + teamName + "TeamSheet.txt", "UTF-8");
+		PrintWriter writer = new PrintWriter("C:\\Users\\Public\\" + teamName + "TeamSheet.txt", "UTF-8");
 		writer.println("Gaolkeeper: " + goalkeeperName);
 		writer.println("Defenders: " + defenderName);
 		writer.println("Midfielders: " + midfielderName);

@@ -17,6 +17,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JButton;
 import javax.swing.JPasswordField;
 
+/**
+ * @author Joseph Kutler
+ *
+ */
+
 public class LogOnPage {
 
 	private JFrame frame;
@@ -83,6 +88,22 @@ public class LogOnPage {
 		frame.getContentPane().add(passwordField);
 
 		btnLogIn.addActionListener(new ActionListener() {
+
+			/*
+			 * Upon the 'Log in' button being pressed the following code will be executed.
+			 * The values contained within the JTextBoxes will be all converted into Strings
+			 * with the appropriate variable name so that they can be passed as a parameter
+			 * into the 'checkExists' method. If the result of this method returns a value
+			 * of true this means that they have entered correct login information and a
+			 * switch-case scenario occurs. This calls the method 'checkRole' and depending
+			 * on the String value returned, a different frame relating to a different class
+			 * is called upon and the current frame is disposed of for efficiency reasons.
+			 * If the 'checkExists' method returns a value of false, this means that the
+			 * user has entered incorrect login information and must reattempt their login.
+			 * If this occurs three times in a row, the program closes for security reasons.
+			 *
+			 */
+
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				String username = usernameEnter.getText();
@@ -109,7 +130,7 @@ public class LogOnPage {
 						}
 
 					} else {
-						if (count > 2) {
+						if (count >= 2) {
 							JOptionPane.showMessageDialog(null,
 									"Login details entered incorrectly too many times, please try again later");
 							Thread.sleep(400);
@@ -133,6 +154,27 @@ public class LogOnPage {
 		});
 	}
 
+	/**
+	 * This method is used to check whether the information entered by the user into
+	 * the username and password fields is a valid username and password combination
+	 * in the 'users' table. I have implemented PreparedStatements here in order to
+	 * prevent SQL injection from occurring. If the username-password combination is
+	 * valid, a value of true is returned and if not then a value of false is
+	 * returned
+	 * 
+	 * @param username This is the String equivalent value of the JTextField
+	 *                 'usernameEnter'
+	 * @param password This is the String equivalent value of the JTextField
+	 *                 'passwordEnter'
+	 * @return This method returns a boolean depending on whether the
+	 *         username-password combination exists in the database or not. A value
+	 *         of true is returned if this combination does exist and a value of
+	 *         false is returned if this combination does not exist
+	 * @throws SQLException An SQLException is thrown as the query being executed on
+	 *                      the database may be syntactically incorrect in SQL, and
+	 *                      so Java must defend against this
+	 */
+
 	public boolean checkExists(String username, String password) throws SQLException {
 
 		try (Connection conn = DriverManager.getConnection("jdbc:sqlite:users");
@@ -154,9 +196,22 @@ public class LogOnPage {
 
 	}
 
+	/**
+	 * This method checks the role that is associated with the username that has
+	 * been entered by the user and returns a String containing the values of the
+	 * role. This will be either 'Player', 'Manager' or 'League developer'.
+	 * 
+	 * @param username This is the String equivalent value of the JTextField
+	 *                 'usernameEnter'
+	 * @returns a String of either 'Player', 'Manager' or 'League developer'
+	 *          depending on what value the field in the table contains
+	 * @throws SQLException An SQLException is thrown as the query being executed on
+	 *                      the database may be syntactically incorrect in SQL, and
+	 *                      so Java must defend against this
+	 */
 	public String checkRole(String username) throws SQLException {
 		try (Connection conn = DriverManager.getConnection("jdbc:sqlite:users");
-		Statement stmt = conn.createStatement()){
+				Statement stmt = conn.createStatement()) {
 
 			String SQL = "select role from users where username = '" + username + "';";
 

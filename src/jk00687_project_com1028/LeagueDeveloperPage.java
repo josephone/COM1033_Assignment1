@@ -16,6 +16,10 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
+/**
+ * @author Joseph Kutler
+ *
+ */
 public class LeagueDeveloperPage {
 
 	private JFrame frame;
@@ -92,6 +96,17 @@ public class LeagueDeveloperPage {
 		frame.getContentPane().add(updateTableBtn);
 
 		updateTableBtn.addActionListener(new ActionListener() {
+
+			/*
+			 * Upon the 'Update tables' button being pressed the values contained within the
+			 * JTextBoxes will be all converted into Strings with the appropriate variable
+			 * name so that they can be passed as a parameter into the 'updateTable' method.
+			 * The 'updateTable' method is then called and is surrounded by a try-catch
+			 * statement, with the catches preventing IllegalArgumentExceptions from
+			 * occurring and SQLExceptions occurring
+			 * 
+			 */
+
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				String teamNameString = teamName.getText();
@@ -104,9 +119,6 @@ public class LeagueDeveloperPage {
 				} catch (IllegalArgumentException | IOException e) {
 					e.printStackTrace();
 					JOptionPane.showMessageDialog(null, "Tables could not be updated");
-				} catch (ClassNotFoundException e) {
-					JOptionPane.showMessageDialog(null, "Tables could not be updated");
-					e.printStackTrace();
 				} catch (SQLException e) {
 					JOptionPane.showMessageDialog(null, "Tables could not be updated");
 					e.printStackTrace();
@@ -124,6 +136,13 @@ public class LeagueDeveloperPage {
 
 		btnUpdateKnockouts.addActionListener(new ActionListener() {
 
+			/*
+			 * Upon the 'Update knockouts' button being pressed, the user is redirected to
+			 * the frame associated with the 'KnockoutsPage' class and the current frame is
+			 * disposed of for efficiency reasons.
+			 * 
+			 */
+
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				KnockoutsPage.main();
@@ -137,6 +156,13 @@ public class LeagueDeveloperPage {
 		frame.getContentPane().add(lblEnterResultsOf);
 		editStatsBtn.addActionListener(new ActionListener() {
 
+			/*
+			 * Upon the 'Edit stats' button being pressed, the user is redirected to the
+			 * frame associated with the 'EditStats' class and the current frame is disposed
+			 * of for efficiency reasons.
+			 * 
+			 */
+
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				EditStats.main();
@@ -147,196 +173,265 @@ public class LeagueDeveloperPage {
 
 	}
 
+	/**
+	 * This extensive method is used to update values contained within the
+	 * 'leaguestandings' table according to the inputs provided by the user in the
+	 * JTextArea. The code checks to see whether the name of the team is already in
+	 * the database, and if it does then the code first works out the new amount of
+	 * games played, the new amount of goals scored and conceded and the new overall
+	 * goal difference. Following this, a conditional statement occurs which checks
+	 * to see whether the amount of goals scored in the match is greater than, equal
+	 * to or less than the amount of goals conceded. If the value of the goals
+	 * scored is greater than amount of goals conceded, the program registers that
+	 * the details being entered for the team results in a win. If the two values
+	 * are equal then the match has resulted in a draw and if the team has conceded
+	 * more goals than they have scored then they have resulted in a loss. Depending
+	 * on the outcome of the match, a different SQL UPDATE statement will be
+	 * executed. This statement is then executed and the table has now been
+	 * successfully updated. If the team does not already exist in the database then
+	 * the 'newTeamInput' method is called which adds a new team to the table.
+	 * 
+	 * @param teamNameFinal      This is the String equivalent value of the
+	 *                           JTextField 'teamName'
+	 * @param goalsScoredFinal   This is the String equivalent value of the
+	 *                           JTextField 'goalsScored'
+	 * @param goalsConcededFinal This is the String equivalent value of the
+	 *                           JTextField 'goalsConceded'
+	 * @throws IllegalArgumentException An IllegalArgumentException has been thrown
+	 *                                  here as some String to Integer and Integer
+	 *                                  to String conversions occur within this
+	 *                                  method which could result in an
+	 *                                  IllegalArgumentException occurring
+	 * @throws IOException              An IOException is thrown as there could be
+	 *                                  an invalid input or output that occurs as a
+	 *                                  result of the execution of this method
+	 * @throws SQLException             An SQLException is thrown as the query being
+	 *                                  executed on the database may be
+	 *                                  syntactically incorrect in SQL, and so Java
+	 *                                  must defend against this
+	 */
 	public void updateTable(String teamNameFinal, String goalsScoredFinal, String goalsConcededFinal)
-			throws IllegalArgumentException, IOException, ClassNotFoundException, SQLException {
-			
-				Connection conn = DriverManager.getConnection("jdbc:sqlite:users");
-				Statement stmt = conn.createStatement();
+			throws IllegalArgumentException, IOException, SQLException {
 
-			if (checkTeamExists(teamNameFinal)) {
-				
+		Connection conn = DriverManager.getConnection("jdbc:sqlite:users");
+		Statement stmt = conn.createStatement();
 
-				int goalSc = Integer.valueOf(goalsScoredFinal);
-				int goalCon = Integer.valueOf(goalsConcededFinal);
-				int goalDifference = goalSc - goalCon;
+		if (checkTeamExists(teamNameFinal)) {
 
-				String gamesPlayed = "SELECT GamesPlayed FROM leaguestandings WHERE TeamName = '" + teamNameFinal
+			int goalSc = Integer.valueOf(goalsScoredFinal);
+			int goalCon = Integer.valueOf(goalsConcededFinal);
+			int goalDifference = goalSc - goalCon;
+
+			String gamesPlayed = "SELECT GamesPlayed FROM leaguestandings WHERE TeamName = '" + teamNameFinal + "';";
+			String gp = null;
+			ResultSet gamesPlayedResult = stmt.executeQuery(gamesPlayed);
+			if (gamesPlayedResult.next()) {
+				gp = gamesPlayedResult.getString("GamesPlayed");
+			}
+
+			int gpNew = Integer.valueOf(gp);
+			int newGamesPlayed = gpNew + 1;
+
+			String goalsScored = "SELECT GoalsScored FROM leaguestandings WHERE TeamName = '" + teamNameFinal + "';";
+			ResultSet goalsScoredResult = stmt.executeQuery(goalsScored);
+			String gsr = null;
+			if (goalsScoredResult.next()) {
+				gsr = goalsScoredResult.getString("goalsScored");
+			}
+			int currentGoalsScored = Integer.valueOf(gsr);
+			int newGoalsScored = goalSc + currentGoalsScored;
+
+			if (Integer.valueOf(goalsScoredFinal) > Integer.valueOf(goalsConcededFinal)) {
+
+				String currentWins = "SELECT Wins FROM leaguestandings WHERE TeamName = '" + teamNameFinal + "';";
+				ResultSet currentWinsResult = stmt.executeQuery(currentWins);
+				String cwr = null;
+				if (currentWinsResult.next()) {
+					cwr = currentWinsResult.getString("Wins");
+				}
+				int wins = Integer.valueOf(cwr);
+				int newWins = wins + 1;
+
+				String goalsConceded = "SELECT GoalsConceded FROM leaguestandings WHERE TeamName = '" + teamNameFinal
 						+ "';";
-				String gp = null;
-				ResultSet gamesPlayedResult = stmt.executeQuery(gamesPlayed);
-				if (gamesPlayedResult.next()) {
-					gp = gamesPlayedResult.getString("GamesPlayed");
+
+				ResultSet goalsConcededResult = stmt.executeQuery(goalsConceded);
+				String gcr = null;
+				if (goalsConcededResult.next()) {
+					gcr = goalsConcededResult.getString("GoalsConceded");
 				}
 
-				int gpNew = Integer.valueOf(gp);
-				int newGamesPlayed = gpNew + 1;
+				int currentGoalsConceded = Integer.valueOf(gcr);
 
-				String goalsScored = "SELECT GoalsScored FROM leaguestandings WHERE TeamName = '" + teamNameFinal
+				int newGoalsConceded = goalCon + currentGoalsConceded;
+
+				int newGoalDifference = newGoalsScored - newGoalsConceded;
+
+				String points = "SELECT Points FROM leaguestandings WHERE TeamName = '" + teamNameFinal + "';";
+				ResultSet pointsResult = stmt.executeQuery(points);
+				String pr = null;
+				if (pointsResult.next()) {
+					pr = pointsResult.getString("Points");
+				}
+				int newPoints = Integer.valueOf(pr) + 3;
+
+				String insertdata = "UPDATE leaguestandings SET GamesPlayed = '" + newGamesPlayed + "', Wins = '"
+						+ newWins + "', GoalsScored = '" + newGoalsScored + "', GoalsConceded = '" + newGoalsConceded
+						+ "', GoalDifference = '" + newGoalDifference + "', Points = '" + newPoints
+						+ "' WHERE TeamName = '" + teamNameFinal + "';";
+
+				stmt.executeUpdate(insertdata);
+
+				conn.close();
+			} else if (Integer.valueOf(goalsScoredFinal) == Integer.valueOf(goalsConcededFinal)) {
+
+				String currentDraws = "SELECT Draws FROM leaguestandings WHERE TeamName = '" + teamNameFinal + "';";
+				ResultSet currentDrawsResult = stmt.executeQuery(currentDraws);
+				String cdr = null;
+				if (currentDrawsResult.next()) {
+					cdr = currentDrawsResult.getString("Draws");
+				}
+				int draws = Integer.valueOf(cdr);
+				int newDraws = draws + 1;
+
+				String goalsConceded = "SELECT GoalsConceded FROM leaguestandings WHERE TeamName = '" + teamNameFinal
 						+ "';";
-				ResultSet goalsScoredResult = stmt.executeQuery(goalsScored);
-				String gsr = null;
-				if (goalsScoredResult.next()) {
-					gsr = goalsScoredResult.getString("goalsScored");
+
+				ResultSet goalsConcededResult = stmt.executeQuery(goalsConceded);
+				String gcr = null;
+				if (goalsConcededResult.next()) {
+					gcr = goalsConcededResult.getString("GoalsConceded");
 				}
-				int currentGoalsScored = Integer.valueOf(gsr);
-				int newGoalsScored = goalSc + currentGoalsScored;
 
-				if (Integer.valueOf(goalsScoredFinal) > Integer.valueOf(goalsConcededFinal)) {
+				int currentGoalsConceded = Integer.valueOf(gcr);
 
-					String currentWins = "SELECT Wins FROM leaguestandings WHERE TeamName = '" + teamNameFinal + "';";
-					ResultSet currentWinsResult = stmt.executeQuery(currentWins);
-					String cwr = null;
-					if (currentWinsResult.next()) {
-						cwr = currentWinsResult.getString("Wins");
-					}
-					int wins = Integer.valueOf(cwr);
-					int newWins = wins + 1;
+				int newGoalsConceded = goalCon + currentGoalsConceded;
 
-					String goalsConceded = "SELECT GoalsConceded FROM leaguestandings WHERE TeamName = '"
-							+ teamNameFinal + "';";
+				int newGoalDifference = newGoalsScored - newGoalsConceded;
 
-					ResultSet goalsConcededResult = stmt.executeQuery(goalsConceded);
-					String gcr = null;
-					if (goalsConcededResult.next()) {
-						gcr = goalsConcededResult.getString("GoalsConceded");
-					}
-
-					int currentGoalsConceded = Integer.valueOf(gcr);
-
-					int newGoalsConceded = goalCon + currentGoalsConceded;
-
-					int newGoalDifference = newGoalsScored - newGoalsConceded;
-
-					String points = "SELECT Points FROM leaguestandings WHERE TeamName = '" + teamNameFinal + "';";
-					ResultSet pointsResult = stmt.executeQuery(points);
-					String pr = null;
-					if (pointsResult.next()) {
-						pr = pointsResult.getString("Points");
-					}
-					int newPoints = Integer.valueOf(pr) + 3;
-
-					String insertdata = "UPDATE leaguestandings SET GamesPlayed = '" + newGamesPlayed + "', Wins = '"
-							+ newWins + "', GoalsScored = '" + newGoalsScored + "', GoalsConceded = '"
-							+ newGoalsConceded + "', GoalDifference = '" + newGoalDifference + "', Points = '"
-							+ newPoints + "' WHERE TeamName = '" + teamNameFinal + "';";
-
-					stmt.executeUpdate(insertdata);
-
-					conn.close();
-				} else if (Integer.valueOf(goalsScoredFinal) == Integer.valueOf(goalsConcededFinal)) {
-
-					String currentDraws = "SELECT Draws FROM leaguestandings WHERE TeamName = '" + teamNameFinal + "';";
-					ResultSet currentDrawsResult = stmt.executeQuery(currentDraws);
-					String cdr = null;
-					if (currentDrawsResult.next()) {
-						cdr = currentDrawsResult.getString("Draws");
-					}
-					int draws = Integer.valueOf(cdr);
-					int newDraws = draws + 1;
-
-					String goalsConceded = "SELECT GoalsConceded FROM leaguestandings WHERE TeamName = '"
-							+ teamNameFinal + "';";
-
-					ResultSet goalsConcededResult = stmt.executeQuery(goalsConceded);
-					String gcr = null;
-					if (goalsConcededResult.next()) {
-						gcr = goalsConcededResult.getString("GoalsConceded");
-					}
-
-					int currentGoalsConceded = Integer.valueOf(gcr);
-
-					int newGoalsConceded = goalCon + currentGoalsConceded;
-
-					int newGoalDifference = newGoalsScored - newGoalsConceded;
-
-					String points = "SELECT Points FROM leaguestandings WHERE TeamName = '" + teamNameFinal + "';";
-					ResultSet pointsResult = stmt.executeQuery(points);
-					String pr = null;
-					if (pointsResult.next()) {
-						pr = pointsResult.getString("Points");
-					}
-					int newPoints = Integer.valueOf(pr) + 1;
-
-					String insertdata = "UPDATE leaguestandings SET GamesPlayed = '" + newGamesPlayed + "', Draws = '"
-							+ newDraws + "', GoalsScored = '" + newGoalsScored + "', GoalsConceded = '"
-							+ newGoalsConceded + "', GoalDifference = '" + newGoalDifference + "', Points = '"
-							+ newPoints + "' WHERE TeamName = '" + teamNameFinal + "';";
-
-					stmt.executeUpdate(insertdata);
-					conn.close();
-
-				} else if (Integer.valueOf(goalsScoredFinal) < Integer.valueOf(goalsConcededFinal)) {
-
-					String currentLosses = "SELECT Losses FROM leaguestandings WHERE TeamName = '" + teamNameFinal
-							+ "';";
-					ResultSet currentLossesResult = stmt.executeQuery(currentLosses);
-					String clr = null;
-					if (currentLossesResult.next()) {
-						clr = currentLossesResult.getString("Losses");
-					}
-					int losses = Integer.valueOf(clr);
-					int newLosses = losses + 1;
-
-					String goalsConceded = "SELECT GoalsConceded FROM leaguestandings WHERE TeamName = '"
-							+ teamNameFinal + "';";
-
-					ResultSet goalsConcededResult = stmt.executeQuery(goalsConceded);
-					String gcr = null;
-					if (goalsConcededResult.next()) {
-						gcr = goalsConcededResult.getString("GoalsConceded");
-					}
-
-					int currentGoalsConceded = Integer.valueOf(gcr);
-
-					int newGoalsConceded = goalCon + currentGoalsConceded;
-
-					int newGoalDifference = newGoalsScored - newGoalsConceded;
-
-					String points = "SELECT Points FROM leaguestandings WHERE TeamName = '" + teamNameFinal + "';";
-					ResultSet pointsResult = stmt.executeQuery(points);
-					String pr = null;
-					if (pointsResult.next()) {
-						pr = pointsResult.getString("Points");
-					}
-					int newPoints = Integer.valueOf(pr) + 0;
-
-					String insertdata = "UPDATE leaguestandings SET GamesPlayed = '" + newGamesPlayed + "', Losses = '"
-							+ newLosses + "', GoalsScored = '" + newGoalsScored + "', GoalsConceded = '"
-							+ newGoalsConceded + "', GoalDifference = '" + newGoalDifference + "', Points = '"
-							+ newPoints + "' WHERE TeamName = '" + teamNameFinal + "';";
-
-					stmt.executeUpdate(insertdata);
-					conn.close();
-
-				} else {
-					throw new IllegalArgumentException("Incorrect details entered");
+				String points = "SELECT Points FROM leaguestandings WHERE TeamName = '" + teamNameFinal + "';";
+				ResultSet pointsResult = stmt.executeQuery(points);
+				String pr = null;
+				if (pointsResult.next()) {
+					pr = pointsResult.getString("Points");
 				}
+				int newPoints = Integer.valueOf(pr) + 1;
+
+				String insertdata = "UPDATE leaguestandings SET GamesPlayed = '" + newGamesPlayed + "', Draws = '"
+						+ newDraws + "', GoalsScored = '" + newGoalsScored + "', GoalsConceded = '" + newGoalsConceded
+						+ "', GoalDifference = '" + newGoalDifference + "', Points = '" + newPoints
+						+ "' WHERE TeamName = '" + teamNameFinal + "';";
+
+				stmt.executeUpdate(insertdata);
+				conn.close();
+
+			} else if (Integer.valueOf(goalsScoredFinal) < Integer.valueOf(goalsConcededFinal)) {
+
+				String currentLosses = "SELECT Losses FROM leaguestandings WHERE TeamName = '" + teamNameFinal + "';";
+				ResultSet currentLossesResult = stmt.executeQuery(currentLosses);
+				String clr = null;
+				if (currentLossesResult.next()) {
+					clr = currentLossesResult.getString("Losses");
+				}
+				int losses = Integer.valueOf(clr);
+				int newLosses = losses + 1;
+
+				String goalsConceded = "SELECT GoalsConceded FROM leaguestandings WHERE TeamName = '" + teamNameFinal
+						+ "';";
+
+				ResultSet goalsConcededResult = stmt.executeQuery(goalsConceded);
+				String gcr = null;
+				if (goalsConcededResult.next()) {
+					gcr = goalsConcededResult.getString("GoalsConceded");
+				}
+
+				int currentGoalsConceded = Integer.valueOf(gcr);
+
+				int newGoalsConceded = goalCon + currentGoalsConceded;
+
+				int newGoalDifference = newGoalsScored - newGoalsConceded;
+
+				String points = "SELECT Points FROM leaguestandings WHERE TeamName = '" + teamNameFinal + "';";
+				ResultSet pointsResult = stmt.executeQuery(points);
+				String pr = null;
+				if (pointsResult.next()) {
+					pr = pointsResult.getString("Points");
+				}
+				int newPoints = Integer.valueOf(pr) + 0;
+
+				String insertdata = "UPDATE leaguestandings SET GamesPlayed = '" + newGamesPlayed + "', Losses = '"
+						+ newLosses + "', GoalsScored = '" + newGoalsScored + "', GoalsConceded = '" + newGoalsConceded
+						+ "', GoalDifference = '" + newGoalDifference + "', Points = '" + newPoints
+						+ "' WHERE TeamName = '" + teamNameFinal + "';";
+
+				stmt.executeUpdate(insertdata);
+				conn.close();
 
 			} else {
-				newTeamInput(teamNameFinal, goalsScoredFinal, goalsConcededFinal);
+				throw new IllegalArgumentException("Incorrect details entered");
 			}
-		
+
+		} else {
+			newTeamInput(teamNameFinal, goalsScoredFinal, goalsConcededFinal);
+		}
+
 	}
+
+	/**
+	 * This method takes in a parameter of 'teamName' as it must be able to access
+	 * the name of the team that is being searched for. A connection is then created
+	 * between the SQLite database 'users' and the Java program and a statement is
+	 * initialised. The method then checks the database to see whether there is an
+	 * entry in the database that has the same value as the name of the team that is
+	 * being searched for. If there is then the boolean value of true is returned,
+	 * if there is not then the boolean value of false is returned.
+	 * 
+	 * @param teamName This is the String equivalent value of the JTextField
+	 *                 'teamName'
+	 * @return This method returns a boolean depending on whether the team exists in
+	 *         the database or not. A value of true is returned if the team does
+	 *         exist and a value of false is returned if the team does not exist
+	 * @throws SQLException An SQLException is thrown as the query being executed on
+	 *                      the database may be syntactically incorrect in SQL, and
+	 *                      so Java must defend against this
+	 */
 
 	public boolean checkTeamExists(String teamName) throws SQLException {
 
 		try (Connection conn = DriverManager.getConnection("jdbc:sqlite:users");
-		Statement stmt = conn.createStatement()){
+				Statement stmt = conn.createStatement()) {
 			String SQL = "select * from leaguestandings where TeamName = '" + teamName + "';";
 
-		ResultSet rset = stmt.executeQuery(SQL);
-		conn.close();
-		if (rset.next()) {
-			rset.close();
-			return true;
-		} else {
-			rset.close();
-			return false;
+			ResultSet rset = stmt.executeQuery(SQL);
+			conn.close();
+			if (rset.next()) {
+				rset.close();
+				return true;
+			} else {
+				rset.close();
+				return false;
+			}
 		}
-		}
-		
 
 	}
+
+	/**
+	 * This method gets called if the name of the team having their result inputted
+	 * can not be found in the 'leaguestandings' table. This code creates a whole
+	 * new SQL row by using an INSERT INTO statement rather than an UPDATE statement
+	 * and, depending on the amount of goals scored in comparison to the amount of
+	 * goals conceded, the row value is initialised in different ways.
+	 * 
+	 * @param teamNameFinal      This is the String equivalent value of the
+	 *                           JTextField 'teamName'
+	 * @param goalsScoredFinal   This is the String equivalent value of the
+	 *                           JTextField 'goalsScored'
+	 * @param goalsConcededFinal This is the String equivalent value of the
+	 *                           JTextField 'goalsConceded'
+	 * @throws SQLException An SQLException is thrown as the query being executed on
+	 *                      the database may be syntactically incorrect in SQL, and
+	 *                      so Java must defend against this
+	 */
 
 	public void newTeamInput(String teamNameFinal, String goalsScoredFinal, String goalsConcededFinal)
 			throws SQLException {
@@ -364,7 +459,7 @@ public class LeagueDeveloperPage {
 			stmt.executeUpdate(insertdata);
 			conn.close();
 		} else {
-			throw new IllegalArgumentException("Result must be a 'Win', 'Draw' or 'Loss'");
+			throw new IllegalArgumentException("Error");
 		}
 		conn.close();
 
