@@ -1,6 +1,16 @@
 package jk00687_project_com1028;
 
+/**
+ * @author Joseph Kutler
+ *
+ */
+
 public class Node {
+
+	/**
+	 * These three fields are nodes that contain data of type int and two nodes,
+	 * teamLeft and teamRight, which are also of type Node
+	 */
 
 	private int score = 0;
 	private Node teamLeft = null;
@@ -12,20 +22,19 @@ public class Node {
 		this.teamLeft = teamLeft;
 		this.teamRight = teamRight;
 	}
-	
+
 	public void setScore(int score) {
 		this.score = score;
 	}
-	
+
 	public void setTeamRight(Node right) {
 		this.teamRight = right;
 	}
 
-
 	public void setTeamLeft(Node left) {
 		this.teamLeft = left;
 	}
-	
+
 	public int getScore() {
 		return score;
 	}
