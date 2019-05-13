@@ -82,9 +82,7 @@ public class Register {
 	 */
 
 	public boolean checkExists(String username) throws SQLException {
-		Connection conn = DriverManager.getConnection(
-				"jdbc:mysql://localhost:3306/users?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC",
-				"root", "password");
+		Connection conn = DriverManager.getConnection("jdbc:sqlite:users");
 		Statement stmt = conn.createStatement();
 		String SQL = "select * from users where username = '" + username + "';";
 
@@ -106,7 +104,8 @@ public class Register {
 	 * thrown. If there is no record of the user inputted username in the database
 	 * then a connection is made to the SQLite database and a statement is
 	 * initialised. An INSERT INTO SQL statement is then created which takes the
-	 * three parameters provided by the user
+	 * three parameters provided by the user and inputs these values into the
+	 * columns of the 'users' table
 	 * 
 	 * @param username
 	 * @param password
@@ -117,16 +116,14 @@ public class Register {
 	public void registerAccount(String username, String password, Role role) throws SQLException {
 
 		if (checkExists(username) == true) {
-			System.out.println("An account already exists with that username, please choose a different username");
 			throw new SQLException();
 		} else {
-			try (Connection conn = DriverManager.getConnection("jdbc:sqlite:users", "root", "password");
+			try (Connection conn = DriverManager.getConnection("jdbc:sqlite:users");
 
 					Statement stmt = conn.createStatement();) {
 
 				String userInput = "insert into users(username, password, role) values ('" + username + "', '"
 						+ password + "', '" + role + "');";
-				System.out.println("The SQL statement is: " + userInput + "\n");
 				stmt.executeUpdate(userInput);
 
 			}
