@@ -27,7 +27,6 @@ public class RegisterPage {
 	private JTextField usernameChoice = null;
 	private JTextField passwordChoice = null;
 	private JTextField roleChoice = null;
-	private boolean inputChoice = false;
 
 	/**
 	 * Launch the application.

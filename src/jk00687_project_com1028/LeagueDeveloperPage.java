@@ -213,10 +213,9 @@ public class LeagueDeveloperPage {
 	public void updateTable(String teamNameFinal, String goalsScoredFinal, String goalsConcededFinal)
 			throws IllegalArgumentException, IOException, SQLException {
 
-		Connection conn = DriverManager.getConnection("jdbc:sqlite:users");
-		Statement stmt = conn.createStatement();
-
 		if (checkTeamExists(teamNameFinal)) {
+			Connection conn = DriverManager.getConnection("jdbc:sqlite:users");
+			Statement stmt = conn.createStatement();
 
 			int goalSc = Integer.valueOf(goalsScoredFinal);
 			int goalCon = Integer.valueOf(goalsConcededFinal);
