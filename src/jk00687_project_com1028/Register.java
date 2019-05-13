@@ -98,46 +98,36 @@ public class Register {
 	}
 
 	/**
-	 * This method allows a user to register a new account into the users database
+	 * This method allows a user to register a new account into the users database.
+	 * The method first checks to see if the username already exists in the database
+	 * as the user must register an account that has a unique username and there
+	 * must not be duplicate rows. If the username already exists then the
+	 * appropriate error message is displayed to the user and an SQLException is
+	 * thrown. If there is no record of the user inputted username in the database
+	 * then a connection is made to the SQLite database and a statement is
+	 * initialised. An INSERT INTO SQL statement is then created which takes the
+	 * three parameters provided by the user
 	 * 
 	 * @param username
 	 * @param password
 	 * @param role
 	 * @throws SQLException
 	 */
-	
+
 	public void registerAccount(String username, String password, Role role) throws SQLException {
 
 		if (checkExists(username) == true) {
 			System.out.println("An account already exists with that username, please choose a different username");
 			throw new SQLException();
 		} else {
-			try (Connection conn = DriverManager.getConnection(
-					"jdbc:mysql://localhost:3306/users?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC",
-					"root", "password");
+			try (Connection conn = DriverManager.getConnection("jdbc:sqlite:users", "root", "password");
 
 					Statement stmt = conn.createStatement();) {
 
-				String userInput = "insert into users values ('" + username + "', '" + password + "');";
+				String userInput = "insert into users(username, password, role) values ('" + username + "', '"
+						+ password + "', '" + role + "');";
+				System.out.println("The SQL statement is: " + userInput + "\n");
 				stmt.executeUpdate(userInput);
-
-				if (Role.PLAYER.equals(getRole())) {
-					String playerInput = "insert into players(username, password, role) values ('" + username + "', '"
-							+ password + "', '" + role + "');";
-					System.out.println("The SQL statement is: " + playerInput + "\n");
-					stmt.executeUpdate(playerInput);
-
-				} else if (Role.MANAGER.equals(getRole())) {
-					String managerInput = "insert into managers(username, password, role) values ('" + username + "', '"
-							+ password + "', '" + role + "');";
-					System.out.println("The SQL statement is: " + managerInput + "\n");
-					stmt.executeUpdate(managerInput);
-				} else {
-					String developerInput = "insert into leaguedevelopers(username, password, role) values ('"
-							+ username + "', '" + password + "', '" + role + "');";
-					System.out.println("The SQL statement is: " + developerInput + "\n");
-					stmt.executeUpdate(developerInput);
-				}
 
 			}
 		}
